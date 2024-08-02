@@ -13,7 +13,6 @@
             - lambda: |-
                 id(deck).switch_screen("$SCREEN_ROOMS"); 
                 
-                
         - type: value-card  # 4
           position:  8, 368
           dimensions: 456x96     
@@ -207,4 +206,3 @@ text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
   - platform: homeassistant #燈條
     id: main_relay7_state
     entity_id: light.yeelight_strip6_0x19dacada
-
