@@ -82,9 +82,13 @@
 ############狀態連結
 
 	
+text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
+  - platform: homeassistant  #取得天氣預報state
+    id: weather_state
+    entity_id: sensor.opencwb_condition
+    
 switch: #開關 one_touch 按鈕在HA暴露，後期作自動化用
   - platform: template #one_touch
     name: "livingroom_one_touch"
     id: livingroom_one_touch
     optimistic: true
-	
