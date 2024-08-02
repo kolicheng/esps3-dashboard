@@ -78,6 +78,26 @@
                 service: input_button.press
                 data:
                   entity_id: input_button.juan_lian
+                  
+        - type: button
+          position: 362, 127  #2-4電腦
+          text: "PC"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(main2_relay4_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: switch.turn_on
+                data:
+                  entity_id: switch.pc_switch
+          on_turn_off:
+            - homeassistant.service:
+                service: switch.turn_off
+                data:
+                  entity_id: switch.pc_switch
 
                   
 ############狀態連結
@@ -95,3 +115,7 @@ text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
   - platform: homeassistant #捲簾
     id: main2_relay3_state
     entity_id: cover.zhu_wo_fang_juan_lian
+    
+  - platform: homeassistant #電腦
+    id: main2_relay4_state
+    entity_id: switch.pc_switch
