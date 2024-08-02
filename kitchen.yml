@@ -1,5 +1,6 @@
 ############頁面簡介
 
+
     - name: ${SCREEN_KITCHEN} #房間畫面
       widgets:
         - type: button
@@ -85,6 +86,7 @@
                   
                   
 ############狀態連結
+
 
 text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
   - platform: homeassistant #廚房燈
