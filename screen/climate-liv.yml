@@ -1,8 +1,8 @@
-############頁面簡介 CLIMATE_KID
+############頁面簡介 CLIMATE_LIV
 screens:
 
 
-    - name: ${SCREEN_CLIMATE_KID# 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
+    - name: ${SCREEN_CLIMATE_LIV# 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
       widgets:
         - type: button
           position: 8, 8     #1-1 座標 返回主畫面
@@ -17,7 +17,7 @@ screens:
         - type: value-card  # 4
           position:  8, 368
           dimensions: 456x96     
-          text: "KidsRoom Climate"
+          text: "LivingRoom Climate"
           #enabled: return true;
                
 
@@ -29,17 +29,17 @@ screens:
           enabled: return true;
           text: "State"
           value: |-
-             return id(climate_state_kid).state;    
+             return id(climate_state_liv).state;    
 
         - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
           position: 8, 127   #2-1 (冷氣狀態)       
           dimensions: 228x110  
-          text: "Kidsroom"
+          text: "Livingroom"
           icon: 󰀛
           # toggle: true
           enabled: return true;
           checked: |-
-            if(id(climate_state_kid).state != "off") { return 1; }
+            if(id(climate_state_liv).state != "off") { return 1; }
             else { return 0; }
           on_click:
             then:
@@ -47,7 +47,7 @@ screens:
                 service: climate.set_hvac_mode #把空調模式設置為冷氣
                 data: 
                   hvac_mode: "cool"
-                  entity_id: climate.ac_child_room_climate
+                  entity_id: climate.ac_living_room_climate
                   
         - type: button 
           position: 126, 127  #2-2 (除溼)        
@@ -56,7 +56,7 @@ screens:
           enabled: |-
             return true;
           checked: |-
-            if(id(climate_state_kid).state == "dry") { return 1; }
+            if(id(climate_state_liv).state == "dry") { return 1; }
             else { return 0; }             
           on_click:
             then:
@@ -64,7 +64,7 @@ screens:
                 service: climate.set_hvac_mode #把空調模式設置為除溼
                 data: 
                   hvac_mode: "dry"
-                  entity_id: climate.ac_child_room_climate          
+                  entity_id: climate.ac_living_room_climate          
 
         - type: button 
           position: 244, 127   #2-3 (送風)       
@@ -73,7 +73,7 @@ screens:
           enabled: |-
             return true;
           checked: |-
-            if(id(climate_state_kid).state == "fan_only") { return 1; }
+            if(id(climate_state_liv).state == "fan_only") { return 1; }
             else { return 0; }             
           on_click:
             then:
@@ -81,7 +81,7 @@ screens:
                 service: climate.set_hvac_mode #把空調模式設置為送風
                 data: 
                   hvac_mode: "fan_only"
-                  entity_id: climate.ac_child_room_climate   
+                  entity_id: climate.ac_living_room_climate   
 
         - type: button 
           position: 362, 246  #2-4 (auto模式)           
@@ -90,7 +90,7 @@ screens:
           enabled: |-
             return true;
           checked: |-
-            if(id(climate_fan_modes_state_kid).state == "auto" && id(climate_state_kid).state != "off") { return 1; }
+            if(id(climate_fan_modes_state_liv).state == "auto" && id(climate_state_liv).state != "off") { return 1; }
             else { return 0; }            
           on_click:
             then:
@@ -98,7 +98,7 @@ screens:
                 service: climate.set_fan_mode #把空調風力設置為自動
                 data: 
                   fan_mode: "auto"
-                  entity_id: climate.ac_child_room_climate
+                  entity_id: climate.ac_living_room_climate
                   
         - type: button
           position: 8, 246  #3-1 關機
@@ -111,7 +111,7 @@ screens:
                 service: climate.set_hvac_mode #關機
                 data: 
                   hvac_mode: "off"
-                  entity_id: climate.ac_child_room_climate
+                  entity_id: climate.ac_living_room_climate
                   
         - type: button
           position: 126, 246 #3-2 溫度下降
@@ -121,19 +121,19 @@ screens:
             - homeassistant.service:
                 service: climate.set_temperature # 調整溫度降溫
                 data:
-                  entity_id: climate.ac_child_room_climate
+                  entity_id: climate.ac_living_room_climate
                 data_template:
                   temperature: '{{ my_variable }}'
                 variables:
                   my_variable: |-
-                    return id(climate_set_kid).state - 1;
+                    return id(climate_set_liv).state - 1;
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
           id: thermostat_infos
           value: |-
             char buff[10] = "-";
-            sprintf(buff, "%.1f", id(climate_set_kid).state);
+            sprintf(buff, "%.1f", id(climate_set_liv).state);
             return std::string(buff);
           text: Set
           icon: 󰔏
@@ -147,36 +147,36 @@ screens:
             - homeassistant.service:
                 service: climate.set_temperature # 調整溫度升溫
                 data:
-                  entity_id: climate.ac_child_room_climate
+                  entity_id: climate.ac_living_room_climate
                 data_template:
                   temperature: '{{ my_variable }}'
                 variables:
                   my_variable: |-
-                    return id(climate_set_kid).state + 1;
+                    return id(climate_set_liv).state + 1;
 
                   
 ############狀態連結
 
 
 text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
-  - platform: homeassistant  #取得小孩房冷氣state
-    id: climate_state_kid
-    entity_id: climate.ac_child_room_climate 
+  - platform: homeassistant  #取得客廳冷氣state
+    id: climate_state_liv
+    entity_id: climate.ac_living_room_climate 
 
-  - platform: homeassistant   #取得小孩房冷氣的 "屬性" fan_mode state
-    id: climate_fan_modes_state_kid
-    entity_id: climate.ac_child_room_climate 
+  - platform: homeassistant   #取得客廳冷氣的 "屬性" fan_mode state
+    id: climate_fan_modes_state_liv
+    entity_id: climate.ac_living_room_climate 
     attribute: fan_mode
 
 sensor:  #"數值" 類用 sensor
-  - platform: homeassistant #取得小孩房冷氣 "目前溫度屬性" 數值
-    id: climate_current_kid
-    entity_id: climate.ac_child_room_climate
+  - platform: homeassistant #取得客廳冷氣 "目前溫度屬性" 數值
+    id: climate_current_liv
+    entity_id: climate.ac_living_room_climate
     attribute: current_temperature
     unit_of_measurement: "°C"
 
-  - platform: homeassistant #取得小孩房冷氣 "目標溫度屬性" 數值
-    id: climate_set_kid
-    entity_id: climate.ac_child_room_climate
+  - platform: homeassistant #取得客廳冷氣 "目標溫度屬性" 數值
+    id: climate_set_liv
+    entity_id: climate.ac_living_room_climate
     attribute: temperature
     unit_of_measurement: "°C"

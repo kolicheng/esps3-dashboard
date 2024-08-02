@@ -12,7 +12,7 @@ screens:
           on_click:
             then:
             - lambda: |-
-                id(deck).switch_screen("$SCREEN_MAIN");
+                id(deck).switch_screen("$SCREEN_CLIMATE");
                 
         - type: value-card  # 4
           position:  8, 368
@@ -157,23 +157,23 @@ screens:
                   
 ############狀態連結
 text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
-  - platform: homeassistant  #取得客廳冷氣state
+  - platform: homeassistant  #取得主臥房冷氣state
     id: climate_state_mai
     entity_id: climate.ac_master_room_climate 
 
-  - platform: homeassistant   #取得客廳冷氣的 "屬性" fan_mode state
+  - platform: homeassistant   #取得主臥房冷氣的 "屬性" fan_mode state
     id: climate_fan_modes_state_mai
     entity_id: climate.ac_master_room_climate 
     attribute: fan_mode
 
 sensor:  #"數值" 類用 sensor
-  - platform: homeassistant #取得客廳冷氣 "目前溫度屬性" 數值
+  - platform: homeassistant #取得主臥房冷氣 "目前溫度屬性" 數值
     id: climate_current_mai
     entity_id: climate.ac_master_room_climate
     attribute: current_temperature
     unit_of_measurement: "°C"
 
-  - platform: homeassistant #取得客廳冷氣 "目標溫度屬性" 數值
+  - platform: homeassistant #取得主臥房冷氣 "目標溫度屬性" 數值
     id: climate_set_mai
     entity_id: climate.ac_master_room_climate
     attribute: temperature

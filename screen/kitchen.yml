@@ -2,7 +2,7 @@
 screens:
 
 
-    - name: ${SCREEN_KITCHEN} #房間畫面
+    - name: ${SCREEN_KITCHEN} #要改房間畫面名稱
       widgets:
         - type: button
           position: 8, 8  #1-1 座標 返回主畫面
@@ -18,7 +18,7 @@ screens:
         - type: value-card  # 4
           position:  8, 368
           dimensions: 456x96     
-          text: "Rooms"
+          text: "Kitchen" #要改房間名稱
           #enabled: return true;
                
                 
@@ -87,7 +87,6 @@ screens:
                   
                   
 ############狀態連結
-
 
 text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
   - platform: homeassistant #廚房燈
