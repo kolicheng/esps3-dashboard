@@ -1,0 +1,77 @@
+############頁面簡介
+
+
+    - name: ${SCREEN_TOILET} #要改房間畫面名稱
+      widgets:
+        - type: button
+          position: 8, 8  #1-1 座標 返回ROOMS頁面
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_ROOMS"); 
+                
+        - type: value-card  # 4
+          position:  8, 368
+          dimensions: 456x96     
+          text: "Toilet" #要改房間名稱
+          #enabled: return true;
+               
+
+############實體開關        
+
+
+        - type: button
+          position: 8, 127  #2-1吸頂燈
+          text: "Toilet"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(toilet_relay1_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.ce_suo_qiang_bi_kai_guan_right
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.ce_suo_qiang_bi_kai_guan_right
+
+        - type: button
+          position: 126, 127  #2-2排風扇
+          text: "Fan"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(toilet_relay2_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: fan.turn_on
+                data:
+                  entity_id: fan.ce_suo_qiang_bi_kai_guan_left
+          on_turn_off:
+            - homeassistant.service:
+                service: fan.turn_off
+                data:
+                  entity_id: fan.ce_suo_qiang_bi_kai_guan_left
+                   
+                  
+############狀態連結
+
+
+text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
+  - platform: homeassistant #吸頂燈
+    id: toilet_relay1_state
+    entity_id: light.ke_fang_qiang_bi_kai_guan_top
+
+  - platform: homeassistant #崁燈
+    id: toilet_relay2_state
+    entity_id: fan.ce_suo_qiang_bi_kai_guan_left
