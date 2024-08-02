@@ -155,7 +155,15 @@
 
                   
 ############狀態連結
+text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
+  - platform: homeassistant  #取得客廳冷氣state
+    id: climate_state
+    entity_id: climate.ac_living_room_climate 
 
+  - platform: homeassistant   #取得客廳冷氣的 "屬性" fan_mode state
+    id: climate_fan_modes_state
+    entity_id: climate.ac_living_room_climate 
+    attribute: fan_mode
 	
 sensor:  #"數值" 類用 sensor
   - platform: homeassistant #取得客廳冷氣 "目前溫度屬性" 數值
@@ -168,4 +176,4 @@ sensor:  #"數值" 類用 sensor
     id: climate_set
     entity_id: climate.ac_living_room_climate
     attribute: temperature
-    unit_of_measurement: "°C"   
+    unit_of_measurement: "°C"
