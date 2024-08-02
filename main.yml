@@ -1,0 +1,90 @@
+############頁面簡介 MAIN
+
+
+    - name: ${SCREEN_MAIN} 
+      widgets:  # 定義該畫面小部件
+        - type: value-card #  1-1 ( value-card 時鐘)
+          id: local_time #把上面建立的Asia/Taipei id抓過來用
+          position: 8, 8 #小部件落點座標
+          text: "Taiwan"
+          enabled: return true;
+
+        - type: value-card  #1-2 (value-card 調用HA裡的溫度entity)
+          id: livingroom_temperature
+          position: 126, 8 
+          text: "°C"
+          icon: 󰔏  #如何置換icon見文章附錄說明
+          # unit: °C # 目前沒用到
+          enabled: return true;
+          # #這個ID調用HA的entity見下方範例。
+          value: |-
+            char buff[10] = "-";
+            sprintf(buff, "%.1f", id(living_temperature).state);  
+            return std::string(buff);  
+
+        - type: value-card  # 1-3+1-4 (天氣預報)
+          position:  244, 8
+          dimensions: 228x96     
+          text: "Weather Forecast"
+          icon: 󰖨
+          enabled: return true;
+          # 把天氣預報的文字顯示出來
+          value: |-
+             return id(weather_state).state;
+               
+
+############實體開關        
+
+
+        - type: button
+          position: 8, 127 # 2-1 (參數調整)
+          text: "Favorite"
+          icon: 󰋑
+          enabled: return true;
+          on_click:
+            lambda: id(deck).switch_screen("$SCREEN_FAVORITE");  # 按下跳到favorite頁面
+
+        - type: button
+          # id: floors
+          position: 126, 127 # 2-2 (進入房間主頁)
+          text: "Rooms"
+          icon: 󰠡
+          enabled: return true;
+          on_click:
+            lambda: id(deck).switch_screen("$SCREEN_ROOMS");
+
+        - type: button
+          position: 8, 365  #4-1 (觸發睡覺場景)
+          text: "Sleep Mode"
+          icon: 󰋣
+          enabled: return true;
+          on_click:
+            - homeassistant.service:
+                service: input_button.press
+                data:
+                  entity_id: input_button.shui_jue_shi_jian
+
+        - type: button
+          position: 362, 365 #4-4座標(one touch)
+          text: "One Touch"
+          icon: 󰄰
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(livingroom_one_touch).state == true ) { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - switch.turn_on: livingroom_one_touch
+          on_turn_off:
+            - switch.turn_off: livingroom_one_touch
+                   
+                  
+############狀態連結
+
+	
+switch: #開關 one_touch 按鈕在HA暴露，後期作自動化用
+  - platform: template #one_touch
+    name: "livingroom_one_touch"
+    id: livingroom_one_touch
+    optimistic: true
+	
