@@ -28,7 +28,7 @@
           enabled: return true;
           text: "State"
           value: |-
-             return id(climate_state).state;    
+             return id(climate_state_liv).state;    
 
         - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
           position: 8, 127   #2-1 (冷氣狀態)       
@@ -38,7 +38,7 @@
           # toggle: true
           enabled: return true;
           checked: |-
-            if(id(climate_state).state != "off") { return 1; }
+            if(id(climate_state_liv).state != "off") { return 1; }
             else { return 0; }
           on_click:
             then:
@@ -55,7 +55,7 @@
           enabled: |-
             return true;
           checked: |-
-            if(id(climate_state).state == "dry") { return 1; }
+            if(id(climate_state_liv).state == "dry") { return 1; }
             else { return 0; }             
           on_click:
             then:
@@ -72,7 +72,7 @@
           enabled: |-
             return true;
           checked: |-
-            if(id(climate_state).state == "fan_only") { return 1; }
+            if(id(climate_state_liv).state == "fan_only") { return 1; }
             else { return 0; }             
           on_click:
             then:
@@ -89,7 +89,7 @@
           enabled: |-
             return true;
           checked: |-
-            if(id(climate_fan_modes_state).state == "auto" && id(climate_state).state != "off") { return 1; }
+            if(id(climate_fan_modes_state_liv).state == "auto" && id(climate_state_liv).state != "off") { return 1; }
             else { return 0; }            
           on_click:
             then:
@@ -125,14 +125,14 @@
                   temperature: '{{ my_variable }}'
                 variables:
                   my_variable: |-
-                    return id(climate_set).state - 1;
+                    return id(climate_set_liv).state - 1;
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
           id: thermostat_infos
           value: |-
             char buff[10] = "-";
-            sprintf(buff, "%.1f", id(climate_set).state);
+            sprintf(buff, "%.1f", id(climate_set_liv).state);
             return std::string(buff);
           text: Set
           icon: 󰔏
@@ -151,29 +151,31 @@
                   temperature: '{{ my_variable }}'
                 variables:
                   my_variable: |-
-                    return id(climate_set).state + 1;
+                    return id(climate_set_liv).state + 1;
 
                   
 ############狀態連結
+
+
 text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
   - platform: homeassistant  #取得客廳冷氣state
-    id: climate_state
+    id: climate_state_liv
     entity_id: climate.ac_living_room_climate 
 
   - platform: homeassistant   #取得客廳冷氣的 "屬性" fan_mode state
-    id: climate_fan_modes_state
+    id: climate_fan_modes_state_liv
     entity_id: climate.ac_living_room_climate 
     attribute: fan_mode
 	
 sensor:  #"數值" 類用 sensor
   - platform: homeassistant #取得客廳冷氣 "目前溫度屬性" 數值
-    id: climate_current
+    id: climate_current_liv
     entity_id: climate.ac_living_room_climate
     attribute: current_temperature
     unit_of_measurement: "°C"
 
   - platform: homeassistant #取得客廳冷氣 "目標溫度屬性" 數值
-    id: climate_set
+    id: climate_set_liv
     entity_id: climate.ac_living_room_climate
     attribute: temperature
     unit_of_measurement: "°C"
