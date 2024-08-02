@@ -1,0 +1,210 @@
+############頁面簡介
+
+
+    - name: ${SCREEN_MAINROOM1} #要改房間畫面名稱
+      widgets:
+        - type: button
+          position: 8, 8  #1-1 座標 返回ROOMS頁面
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_ROOMS"); 
+                
+                
+        - type: value-card  # 4
+          position:  8, 368
+          dimensions: 456x96     
+          text: "MainRoom" #要改房間名稱
+          #enabled: return true;
+               
+
+############實體開關        
+
+
+        - type: button
+          position: 8, 127  #2-1吸頂燈
+          text: "MainRoom"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(main_relay1_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_men_bian_left
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_men_bian_left
+
+        - type: button
+          position: 126, 127  #2-2崁燈
+          text: "Closet"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(main_relay2_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_men_bian_right
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_men_bian_right
+
+        - type: button
+          position: 244, 127  #2-3投射燈
+          text: "Headboard"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(main_relay3_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_chuang_tou_left
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_chuang_tou_left
+                  
+        - type: button
+          position: 362, 127  #2-4書房燈
+          text: "Study"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(main_relay4_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_ce_suo_top
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_ce_suo_top
+                  
+        - type: button
+          position: 8, 246  #3-1廁所燈
+          text: "Toilet"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(main_relay5_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_ce_suo_bottom
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_ce_suo_bottom
+                  
+        - type: button
+          position: 126, 246  #3-2床頭燈
+          text: "Bedside"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(main_relay6_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.sonoff_basic_et2qw_light
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.sonoff_basic_et2qw_light
+                  
+        - type: button
+          position: 244, 246  #3-3床下燈條
+          text: "UnderBed"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(main_relay7_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.yeelight_strip6_0x19dacada
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.yeelight_strip6_0x19dacada
+                  
+        - type: button
+          position: 362, 246  #3-4其他
+          text: "Other"
+          icon: 󰥾
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAINROOM2"); 
+                   
+                  
+############狀態連結
+
+
+text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
+  - platform: homeassistant #吸頂燈
+    id: main_relay1_state
+    entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_men_bian_left
+
+  - platform: homeassistant #崁燈
+    id: main_relay2_state
+    entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_men_bian_right
+    
+  - platform: homeassistant #投射燈
+    id: main_relay3_state
+    entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_chuang_tou_left
+    
+  - platform: homeassistant #書房燈
+    id: main_relay4_state
+    entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_ce_suo_top
+    
+  - platform: homeassistant #廁所燈
+    id: main_relay5_state
+    entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_ce_suo_bottom
+
+  - platform: homeassistant #床頭燈
+    id: main_relay6_state
+    entity_id: light.sonoff_basic_et2qw_light
+    
+  - platform: homeassistant #燈條
+    id: main_relay7_state
+    entity_id: light.yeelight_strip6_0x19dacada
+
