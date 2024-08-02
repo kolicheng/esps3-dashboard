@@ -1,0 +1,69 @@
+############頁面簡介 CLIMATE
+
+
+    - name: ${SCREEN_CLIMATE# 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
+      widgets:
+        - type: button
+          position: 8, 8     #1-1 座標 返回主畫面
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+                
+        - type: value-card  # 4
+          position:  8, 368
+          dimensions: 456x96     
+          text: "Climate"
+          #enabled: return true;
+               
+
+############實體開關        
+
+
+        - type: button
+          position: 8, 127  #2-1座標
+          text: "LivingRoom"
+          icon: 󰒹
+          enabled: return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_CLIMATE_LIV");
+
+        - type: button
+          position: 126, 127  #2-2座標
+          text: "MainRoom"
+          icon: 󰿒
+          enabled: return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_CLIMATE_MAI");
+
+        - type: button
+          position: 244, 127  #2-3座標
+          text: "KidsRoom"
+          icon: 󰢠
+          enabled: return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_CLIMATE_KID");
+
+        - type: button
+          position: 362, 127   #2-4座標
+          text: "GuestRoom"
+          icon: 󰦫
+          enabled: return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_CLIMATE_GUE");
+                   
+                  
+############狀態連結
+
+	
