@@ -1,4 +1,5 @@
 ############頁面簡介 CLIMATE_LIV
+screens:
 
 
     - name: ${SCREEN_CLIMATE_LIV# 各家空調功能不一，詳見HA裡面entity自帶的屬性內容

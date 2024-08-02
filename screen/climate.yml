@@ -1,10 +1,11 @@
-############頁面簡介 MAIN
+############頁面簡介 CLIMATE
+screens:
 
 
-    - name: ${SCREEN_ROOMS} #房間畫面
+    - name: ${SCREEN_CLIMATE# 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
       widgets:
         - type: button
-          position: 8, 8  #1-1 座標 返回主畫面
+          position: 8, 8     #1-1 座標 返回主畫面
           icon: 󰁍
           enabled: |-
             return true;
@@ -16,7 +17,7 @@
         - type: value-card  # 4
           position:  8, 368
           dimensions: 456x96     
-          text: "Rooms"
+          text: "Climate"
           #enabled: return true;
                
 
@@ -28,6 +29,10 @@
           text: "LivingRoom"
           icon: 󰒹
           enabled: return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_CLIMATE_LIV");
 
         - type: button
           position: 126, 127  #2-2座標
@@ -37,7 +42,7 @@
           on_click:
             then:
             - lambda: |-
-                id(deck).switch_screen("$SCREEN_MAINROOM1");
+                id(deck).switch_screen("$SCREEN_CLIMATE_MAI");
 
         - type: button
           position: 244, 127  #2-3座標
@@ -47,50 +52,17 @@
           on_click:
             then:
             - lambda: |-
-                id(deck).switch_screen("$SCREEN_KIDSROOM");
+                id(deck).switch_screen("$SCREEN_CLIMATE_KID");
 
         - type: button
           position: 362, 127   #2-4座標
-          text: "Kitchen"
-          icon: 󰩰
-          enabled: |-
-            return true;
-          on_click:
-            then:
-            - lambda: |-
-                id(deck).switch_screen("$SCREEN_KITCHEN");
-
-        - type: button
-          position: 8, 246  #3-1座標
-          text: "Toilet"
-          icon: 󱠘
-          enabled: return true;
-          on_click:
-            then:
-            - lambda: |-
-                id(deck).switch_screen("$SCREEN_TOILET");
-
-        - type: button
-          position: 126, 246  #3-2座標
           text: "GuestRoom"
           icon: 󰦫
           enabled: return true;
           on_click:
             then:
             - lambda: |-
-                id(deck).switch_screen("$SCREEN_GUESTROOM1");
-
-        - type: button
-          position: 244, 246  #3-3座標
-          text: "DiningRoom"
-          icon: 󱟼
-          enabled: return true;
-
-        - type: button
-          position: 362, 246  #3-4座標
-          text: "Balcony"
-          icon: 󰤈
-          enabled: return true;
+                id(deck).switch_screen("$SCREEN_CLIMATE_GUE");
                    
                   
 ############狀態連結

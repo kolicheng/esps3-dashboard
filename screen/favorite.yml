@@ -1,4 +1,5 @@
 ############頁面簡介 FAVORITE
+screens:
 
 
     - name: ${SCREEN_FAVORITE}  #調整參數畫面
@@ -57,7 +58,7 @@
                 service: light.turn_on
                 data:
                   entity_id: light.yeelight_strip6_0x12eed7e1
-                  brightness: !lambda return x;
+                  brightness: lambda return x;
                   
         - type: button
           position: 155, 320

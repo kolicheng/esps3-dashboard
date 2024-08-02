@@ -1,4 +1,5 @@
 ############頁面簡介 MAIN
+screens:
 
 
     - name: ${SCREEN_MAIN} 
@@ -81,7 +82,7 @@
                   
 ############狀態連結
 
-	
+
 text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
   - platform: homeassistant  #取得天氣預報state
     id: weather_state

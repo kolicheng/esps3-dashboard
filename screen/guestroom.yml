@@ -1,7 +1,8 @@
 ############頁面簡介
+screens:
 
 
-    - name: ${SCREEN_KIDSROOM} #要改房間畫面名稱
+    - name: ${SCREEN_GUESTROOM} #要改房間畫面名稱
       widgets:
         - type: button
           position: 8, 8  #1-1 座標 返回ROOMS頁面
@@ -16,7 +17,7 @@
         - type: value-card  # 4
           position:  8, 368
           dimensions: 456x96     
-          text: "KidsRoom" #要改房間名稱
+          text: "GuestRoom" #要改房間名稱
           #enabled: return true;
                
 
@@ -25,23 +26,23 @@
 
         - type: button
           position: 8, 127  #2-1吸頂燈
-          text: "KidsRoom"
+          text: "GuestRoom"
           icon: 󰥾
           toggle: true
           enabled: return true;
           checked: |-
-            if(id(kids_relay1_state).state == "on") { return 1; }
+            if(id(guest_relay1_state).state == "on") { return 1; }
             else { return 0; }
           on_turn_on:
             - homeassistant.service:
                 service: light.turn_on
                 data:
-                  entity_id: light.xiao_hai_fang_qiang_bi_kai_guan_bottom
+                  entity_id: light.ke_fang_qiang_bi_kai_guan_top
           on_turn_off:
             - homeassistant.service:
                 service: light.turn_off
                 data:
-                  entity_id: light.xiao_hai_fang_qiang_bi_kai_guan_bottom
+                  entity_id: light.ke_fang_qiang_bi_kai_guan_top
 
         - type: button
           position: 126, 127  #2-2崁燈
@@ -50,18 +51,18 @@
           toggle: true
           enabled: return true;
           checked: |-
-            if(id(kids_relay2_state).state == "on") { return 1; }
+            if(id(guest_relay2_state).state == "on") { return 1; }
             else { return 0; }
           on_turn_on:
             - homeassistant.service:
                 service: light.turn_on
                 data:
-                  entity_id: light.xiao_hai_fang_qiang_bi_kai_guan_top
+                  entity_id: light.ke_fang_qiang_bi_kai_guan_bottom
           on_turn_off:
             - homeassistant.service:
                 service: light.turn_off
                 data:
-                  entity_id: light.xiao_hai_fang_qiang_bi_kai_guan_top
+                  entity_id: light.ke_fang_qiang_bi_kai_guan_bottom
 
         - type: button
           position: 244, 127  #2-3插座
@@ -70,38 +71,18 @@
           toggle: true
           enabled: return true;
           checked: |-
-            if(id(kids_relay3_state).state == "on") { return 1; }
+            if(id(guest_relay3_state).state == "on") { return 1; }
             else { return 0; }
           on_turn_on:
             - homeassistant.service:
                 service: switch.turn_on
                 data:
-                  entity_id: switch.xiao_hai_fang_cha_zuo
+                  entity_id: switch.ke_fang_cha_zuo
           on_turn_off:
             - homeassistant.service:
                 service: switch.turn_off
                 data:
-                  entity_id: switch.xiao_hai_fang_cha_zuo
-                  
-        - type: button
-          position: 362, 127  #2-4空氣清淨機
-          text: "Air Purifier"
-          icon: 󰥾
-          toggle: true
-          enabled: return true;
-          checked: |-
-            if(id(kids_relay4_state).state == "on") { return 1; }
-            else { return 0; }
-          on_turn_on:
-            - homeassistant.service:
-                service: fan.turn_on
-                data:
-                  entity_id: fan.zhimi_mb1_4e66_air_purifier
-          on_turn_off:
-            - homeassistant.service:
-                service: fan.turn_off
-                data:
-                  entity_id: fan.zhimi_mb1_4e66_air_purifier
+                  entity_id: switch.ke_fang_cha_zuo
                    
                   
 ############狀態連結
@@ -109,17 +90,13 @@
 
 text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
   - platform: homeassistant #吸頂燈
-    id: kids_relay1_state
-    entity_id: light.xiao_hai_fang_qiang_bi_kai_guan_bottom
+    id: guest_relay1_state
+    entity_id: light.ke_fang_qiang_bi_kai_guan_top
 
   - platform: homeassistant #崁燈
-    id: kids_relay2_state
-    entity_id: light.xiao_hai_fang_qiang_bi_kai_guan_top
+    id: guest_relay2_state
+    entity_id: light.ke_fang_qiang_bi_kai_guan_bottom
     
   - platform: homeassistant #插座
-    id: kids_relay3_state
-    entity_id: switch.xiao_hai_fang_cha_zuo
-    
-  - platform: homeassistant #空氣清淨機
-    id: kids_relay4_state
-    entity_id: fan.zhimi_mb1_4e66_air_purifier
+    id: guest_relay3_state
+    entity_id: switch.ke_fang_cha_zuo

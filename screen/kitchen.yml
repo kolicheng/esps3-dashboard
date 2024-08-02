@@ -1,4 +1,5 @@
 ############頁面簡介
+screens:
 
 
     - name: ${SCREEN_KITCHEN} #房間畫面
