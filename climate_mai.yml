@@ -33,7 +33,7 @@
         - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
           position: 8, 127   #2-1 (冷氣狀態)       
           dimensions: 228x110  
-          text: "Livingroom"
+          text: "Mainroom"
           icon: 󰀛
           # toggle: true
           enabled: return true;
@@ -155,8 +155,6 @@
 
                   
 ############狀態連結
-
-
 text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
   - platform: homeassistant  #取得客廳冷氣state
     id: climate_state_mai
@@ -166,7 +164,7 @@ text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
     id: climate_fan_modes_state_mai
     entity_id: climate.ac_master_room_climate 
     attribute: fan_mode
-
+	
 sensor:  #"數值" 類用 sensor
   - platform: homeassistant #取得客廳冷氣 "目前溫度屬性" 數值
     id: climate_current_mai
