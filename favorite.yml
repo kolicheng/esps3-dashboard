@@ -1,0 +1,94 @@
+############頁面簡介 FAVORITE
+
+
+    - name: ${SCREEN_FAVORITE}  #調整參數畫面
+      widgets:
+        - type: button   #返回主畫面
+          position: 0, 0
+          dimensions: 48x480     
+          icon: 󰅁
+          enabled: return true;
+          on_click:
+            - lambda: id(deck).switch_screen("$SCREEN_MAIN");
+                
+        - type: value-card  # 4
+          position:  8, 368
+          dimensions: 456x96     
+          text: "Favorite" #要改房間名稱
+          #enabled: return true;
+               
+
+############實體開關        
+
+
+        - type: slider #滑桿元件
+          position: 80, 40
+          dimensions: 60x255  # 滑桿大小，寬60 高255 畫面亮度調整255步，所以 max:255
+          min: 1
+          max: 255
+          text: "Screen"
+          enabled: return true;
+          value: return id(device).get_brightness();
+          on_change:
+            lambda: id(device).set_brightness(x);
+              id(screen_brightness).publish_state(x);
+              
+        - type: value-card
+          position: 80, 310
+          dimensions: 60x50
+          enabled: return true;
+          value: |-
+            char buff[10] = "-";
+            sprintf(buff, "%.0f", id(screen_brightness).state); // Use "%.0f" to remove decimal points
+            return std::string(buff);  
+
+
+        - type: slider
+          position: 155, 40
+          dimensions: 60x255  # WLED亮度調整參數是0-255步，所以滑桿元件的大小 255 吻合
+          min: 0
+          max: 255
+          enabled: return true;
+          value: |-
+            if(id(liv_light_brightness).state <= 255) { return id(liv_light_brightness).state; }
+            else { return 0; }
+          on_change:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.yeelight_strip6_0x12eed7e1
+                  brightness: !lambda return x;
+                  
+        - type: button
+          position: 155, 320
+          dimensions: 60x50
+          text: "LivLight"
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(liv_light_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.yeelight_strip6_0x12eed7e1
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.yeelight_strip6_0x12eed7e1
+
+
+############狀態連結
+
+
+text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
+  - platform: homeassistant #取得livingroom "屬性" 亮度數值
+    id: liv_light_brightness
+    entity_id: light.yeelight_strip6_0x12eed7e1
+    attribute: brightness
+
+  - platform: homeassistant #取得客廳溫度state
+    id: living_temperature
+    entity_id: sensor.air_cube_8581c4_temperature
