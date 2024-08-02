@@ -914,7 +914,7 @@ ha_deck:
           # toggle: true
           enabled: return true;
           checked: |-
-            if(id(climate_state).state != "off") { return 1; }
+            if(id(climate_state_liv).state != "off") { return 1; }
             else { return 0; }
           on_click:
             then:
@@ -931,7 +931,7 @@ ha_deck:
           enabled: |-
             return true;
           checked: |-
-            if(id(climate_state).state == "dry") { return 1; }
+            if(id(climate_state_liv).state == "dry") { return 1; }
             else { return 0; }             
           on_click:
             then:
@@ -948,7 +948,7 @@ ha_deck:
           enabled: |-
             return true;
           checked: |-
-            if(id(climate_state).state == "fan_only") { return 1; }
+            if(id(climate_state_liv).state == "fan_only") { return 1; }
             else { return 0; }             
           on_click:
             then:
@@ -965,7 +965,7 @@ ha_deck:
           enabled: |-
             return true;
           checked: |-
-            if(id(climate_fan_modes_state).state == "auto" && id(climate_state).state != "off") { return 1; }
+            if(id(climate_fan_modes_state).state == "auto" && id(climate_state_liv).state != "off") { return 1; }
             else { return 0; }            
           on_click:
             then:
@@ -1199,16 +1199,14 @@ text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
   - platform: homeassistant #崁燈
     id: toilet_relay2_state
     entity_id: fan.ce_suo_qiang_bi_kai_guan_left
-    
-  - platform: homeassistant #取得livingroom "屬性" 亮度數值
-    id: liv_light_brightness
-    entity_id: light.yeelight_strip6_0x12eed7e1
-    attribute: brightness
 
-  - platform: homeassistant #取得客廳溫度state
-    id: living_temperature
-    entity_id: sensor.air_cube_8581c4_temperature
-    
+  - platform: homeassistant #走道燈條
+    id: liv_light_state
+    entity_id: light.yeelight_strip6_0x12eed7e1
+
+  - platform: homeassistant #客廳冷氣
+    id: climate_state_liv
+    entity_id: climate.ac_living_room_climate
 
 sensor:  #"數值" 類用 sensor
   - platform: homeassistant #取得客廳冷氣 "目前溫度屬性" 數值
@@ -1225,7 +1223,7 @@ sensor:  #"數值" 類用 sensor
 
   - platform: homeassistant #取得livingroom "屬性" 亮度數值
     id: liv_light_brightness
-    entity_id: light.yeelight_strip6_0x19dacada
+    entity_id: light.yeelight_strip6_0x12eed7e1
     attribute: brightness
 
   - platform: homeassistant #取得客廳溫度state
