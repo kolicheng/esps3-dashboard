@@ -1,0 +1,100 @@
+############頁面簡介
+
+    - name: ${SCREEN_KITCHEN} #房間畫面
+      widgets:
+        - type: button
+          position: 8, 8  #1-1 座標 返回主畫面
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_ROOMS"); 
+                
+                
+        - type: value-card  # 4
+          position:  8, 368
+          dimensions: 456x96     
+          text: "Rooms"
+          #enabled: return true;
+               
+                
+############實體開關        
+
+
+        - type: button
+          position: 8, 127  #2-1廚房燈
+          text: "Kitchen"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(Kettle_relay1_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.chu_fang_qiang_bi_kai_guan_top
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.chu_fang_qiang_bi_kai_guan_top
+
+        - type: button
+          position: 126, 127  #2-2電器櫃燈
+          text: "Electric Cabinet"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(Kettle_relay2_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.sonoff_basic_t64ef_light
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.sonoff_basic_t64ef_light
+
+        - type: button
+          position: 244, 127  #2-3循環扇
+          text: "Fan"
+          icon: 󰈐
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(chu_fang_cha_zuo_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: fan.turn_on
+                data:
+                  entity_id: fan.chu_fang_cha_zuo
+          on_turn_off:
+            - homeassistant.service:
+                service: fan.turn_off
+                data:
+                  entity_id: fan.chu_fang_cha_zuo
+                  
+                  
+############狀態連結
+
+text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
+  - platform: homeassistant #廚房燈
+    id: Kettle_relay1_state
+    entity_id: light.chu_fang_qiang_bi_kai_guan_top
+
+  - platform: homeassistant #廚房循環扇
+    id: chu_fang_cha_zuo_state
+    entity_id: fan.chu_fang_cha_zuo
+
+  - platform: homeassistant #電器櫃燈
+    id: Kettle_relay2_state
+    entity_id: light.sonoff_basic_t64ef_light
