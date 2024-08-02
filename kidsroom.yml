@@ -124,20 +124,3 @@ text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
   - platform: homeassistant #空氣清淨機
     id: kids_relay4_state
     entity_id: fan.zhimi_mb1_4e66_air_purifier
-    
-    
-    
-    
-    
-    
-  - platform: homeassistant #廁所燈
-    id: main_relay5_state
-    entity_id: light.zhu_wo_fang_qiang_bi_kai_guan_ce_suo_bottom
-
-  - platform: homeassistant #床頭燈
-    id: main_relay6_state
-    entity_id: light.sonoff_basic_et2qw_light
-    
-  - platform: homeassistant #燈條
-    id: main_relay7_state
-    entity_id: light.yeelight_strip6_0x19dacada
