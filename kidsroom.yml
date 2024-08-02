@@ -13,7 +13,6 @@
             - lambda: |-
                 id(deck).switch_screen("$SCREEN_ROOMS"); 
                 
-                
         - type: value-card  # 4
           position:  8, 368
           dimensions: 456x96     
