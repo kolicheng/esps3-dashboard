@@ -284,7 +284,7 @@ ha_deck:
           on_click:
             then:
             - lambda: |-
-                id(deck).switch_screen("$SCREEN_GUESTROOM1");
+                id(deck).switch_screen("$SCREEN_GUESTROOM");
 
         - type: button
           position: 244, 246  #3-3座標
@@ -819,7 +819,7 @@ ha_deck:
 ############頁面簡介 CLIMATE
 
 
-    - name: ${SCREEN_CLIMATE# 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
+    - name: ${SCREEN_CLIMATE} #各家空調功能不一，詳見HA裡面entity自帶的屬性內容
       widgets:
         - type: button
           position: 8, 8     #1-1 座標 返回主畫面
@@ -881,7 +881,7 @@ ha_deck:
 ############頁面簡介 CLIMATE_LIV
 
 
-    - name: ${SCREEN_CLIMATE_LIV# 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
+    - name: ${SCREEN_CLIMATE_LIV} #各家空調功能不一，詳見HA裡面entity自帶的屬性內容
       widgets:
         - type: button
           position: 8, 8     #1-1 座標 返回主畫面
@@ -907,9 +907,8 @@ ha_deck:
              return id(climate_state_liv).state;    
 
         - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
-          position: 8, 127   #2-1 (冷氣狀態)       
-          dimensions: 228x110  
-          text: "Livingroom"
+          position: 8, 127   #2-1 (冷氣狀態)   
+          text: "Cool"
           icon: 󰀛
           # toggle: true
           enabled: return true;
@@ -959,7 +958,7 @@ ha_deck:
                   entity_id: climate.ac_living_room_climate   
 
         - type: button 
-          position: 362, 246  #2-4 (auto模式)           
+          position: 362, 127  #2-4 (auto模式)           
           text: "Auto"
           icon: 󰵢
           enabled: |-
@@ -1005,13 +1004,10 @@ ha_deck:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
-          id: thermostat_infos
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_liv).state);
             return std::string(buff);
-          text: Set
-          icon: 󰔏
           enabled: return true;
 
         - type: button
@@ -1033,7 +1029,7 @@ ha_deck:
 ############頁面簡介 CLIMATE_MAI
 
 
-    - name: ${SCREEN_CLIMATE_MAI# 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
+    - name: ${SCREEN_CLIMATE_MAI} #各家空調功能不一，詳見HA裡面entity自帶的屬性內容
       widgets:
         - type: button
           position: 8, 8     #1-1 座標 返回主畫面
@@ -1060,8 +1056,7 @@ ha_deck:
 
         - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
           position: 8, 127   #2-1 (冷氣狀態)       
-          dimensions: 228x110  
-          text: "Mainroom"
+          text: "Cool"
           icon: 󰀛
           # toggle: true
           enabled: return true;
@@ -1111,7 +1106,7 @@ ha_deck:
                   entity_id: climate.ac_master_room_climate   
 
         - type: button 
-          position: 362, 246  #2-4 (auto模式)           
+          position: 362, 127  #2-4 (auto模式)           
           text: "Auto"
           icon: 󰵢
           enabled: |-
@@ -1157,13 +1152,10 @@ ha_deck:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
-          id: thermostat_infos
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_mai).state);
             return std::string(buff);
-          text: Set
-          icon: 󰔏
           enabled: return true;
 
         - type: button
@@ -1185,7 +1177,7 @@ ha_deck:
 ############頁面簡介 CLIMATE_KID
 
 
-    - name: ${SCREEN_CLIMATE_KID# 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
+    - name: ${SCREEN_CLIMATE_KID} #各家空調功能不一，詳見HA裡面entity自帶的屬性內容
       widgets:
         - type: button
           position: 8, 8     #1-1 座標 返回主畫面
@@ -1212,8 +1204,7 @@ ha_deck:
 
         - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
           position: 8, 127   #2-1 (冷氣狀態)       
-          dimensions: 228x110  
-          text: "Kidsroom"
+          text: "Cool"
           icon: 󰀛
           # toggle: true
           enabled: return true;
@@ -1263,7 +1254,7 @@ ha_deck:
                   entity_id: climate.ac_child_room_climate   
 
         - type: button 
-          position: 362, 246  #2-4 (auto模式)           
+          position: 362, 127  #2-4 (auto模式)           
           text: "Auto"
           icon: 󰵢
           enabled: |-
@@ -1309,13 +1300,10 @@ ha_deck:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
-          id: thermostat_infos
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_kid).state);
             return std::string(buff);
-          text: Set
-          icon: 󰔏
           enabled: return true;
 
         - type: button
@@ -1337,7 +1325,7 @@ ha_deck:
 ############頁面簡介 CLIMATE_GUE
 
 
-    - name: ${SCREEN_CLIMATE_GUE# 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
+    - name: ${SCREEN_CLIMATE_GUE} #各家空調功能不一，詳見HA裡面entity自帶的屬性內容
       widgets:
         - type: button
           position: 8, 8     #1-1 座標 返回主畫面
@@ -1347,7 +1335,7 @@ ha_deck:
           on_click:
             then:
             - lambda: |-
-                id(deck).switch_screen("$SCREEN_CLIMATEN");
+                id(deck).switch_screen("$SCREEN_CLIMATE");
                 
         - type: value-card  # 4
           position:  8, 368
@@ -1364,8 +1352,7 @@ ha_deck:
 
         - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
           position: 8, 127   #2-1 (冷氣狀態)       
-          dimensions: 228x110  
-          text: "Guestroom"
+          text: "Cool"
           icon: 󰀛
           # toggle: true
           enabled: return true;
@@ -1415,7 +1402,7 @@ ha_deck:
                   entity_id: climate.ac_guest_room_climate   
 
         - type: button 
-          position: 362, 246  #2-4 (auto模式)           
+          position: 362, 127  #2-4 (auto模式)           
           text: "Auto"
           icon: 󰵢
           enabled: |-
@@ -1461,13 +1448,10 @@ ha_deck:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
-          id: thermostat_infos
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_gue).state);
             return std::string(buff);
-          text: Set
-          icon: 󰔏
           enabled: return true;
 
         - type: button
@@ -1504,7 +1488,6 @@ ha_deck:
           dimensions: 456x96     
           text: "Favorite" #要改房間名稱
           #enabled: return true;
-
         - type: slider #滑桿元件
           position: 80, 40
           dimensions: 60x255  # 滑桿大小，寬60 高255 畫面亮度調整255步，所以 max:255
@@ -1540,8 +1523,8 @@ ha_deck:
                 service: light.turn_on
                 data:
                   entity_id: light.yeelight_strip6_0x12eed7e1
-                  brightness: lambda return x;
-                  
+                  brightness: !lambda return x;
+
         - type: button
           position: 155, 320
           dimensions: 60x50
