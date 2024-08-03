@@ -47,7 +47,9 @@ substitutions:
   SCREEN_CLIMATE_KID: climate-kid
   SCREEN_CLIMATE_MAI: climate-mai
   SCREEN_CLIMATE_GUE: climate-gue
-  
+  SCREEN_LIVINGROOM: livingroom
+  SCREEN_BALCONY: balcony
+
   
 ###################################################### 系統設定
 
@@ -211,29 +213,15 @@ ha_deck:
 ############頁面簡介 ROOMS
 
 
-    - name: ${SCREEN_ROOMS} #房間畫面
-      widgets:
-        - type: button
-          position: 8, 8  #1-1 座標 返回主畫面
-          icon: 󰁍
-          enabled: |-
-            return true;
-          on_click:
-            then:
-            - lambda: |-
-                id(deck).switch_screen("$SCREEN_MAIN");
-                
-        - type: value-card  # 4
-          position:  8, 368
-          dimensions: 456x96     
-          text: "Rooms"
-          #enabled: return true;
-
         - type: button
           position: 8, 127  #2-1座標
           text: "LivingRoom"
           icon: 󰒹
           enabled: return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_LIVINGROOM");
 
         - type: button
           position: 126, 127  #2-2座標
@@ -288,15 +276,13 @@ ha_deck:
 
         - type: button
           position: 244, 246  #3-3座標
-          text: "DiningRoom"
-          icon: 󱟼
-          enabled: return true;
-
-        - type: button
-          position: 362, 246  #3-4座標
           text: "Balcony"
           icon: 󰤈
           enabled: return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_BALCONY");
                    
 
 ############頁面簡介 MAINROOM1

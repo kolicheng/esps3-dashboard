@@ -29,6 +29,10 @@ screens:
           text: "LivingRoom"
           icon: 󰒹
           enabled: return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_LIVINGROOM");
 
         - type: button
           position: 126, 127  #2-2座標
@@ -79,19 +83,17 @@ screens:
           on_click:
             then:
             - lambda: |-
-                id(deck).switch_screen("$SCREEN_GUESTROOM1");
+                id(deck).switch_screen("$SCREEN_GUESTROOM");
 
         - type: button
           position: 244, 246  #3-3座標
-          text: "DiningRoom"
-          icon: 󱟼
-          enabled: return true;
-
-        - type: button
-          position: 362, 246  #3-4座標
           text: "Balcony"
           icon: 󰤈
           enabled: return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_BALCONY");
                    
                   
 ############狀態連結

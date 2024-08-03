@@ -1,0 +1,102 @@
+############頁面簡介 MEDIA
+screens:
+
+
+    - name: ${SCREEN_MEDIA} #要改房間畫面名稱
+      widgets:
+        - type: button
+          position: 8, 8  #1-1 座標 返回MAIN頁面
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN"); 
+                
+        - type: value-card  # 4
+          position:  8, 368
+          dimensions: 456x96     
+          text: "Media" #要改房間名稱
+          #enabled: return true;
+               
+
+############實體開關        
+
+
+        - type: button
+          position: 8, 127  #2-1吸頂燈
+          text: "GuestRoom"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(guest_relay1_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.ke_fang_qiang_bi_kai_guan_top
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.ke_fang_qiang_bi_kai_guan_top
+
+        - type: button
+          position: 126, 127  #2-2崁燈
+          text: "Closet"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(guest_relay2_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.ke_fang_qiang_bi_kai_guan_bottom
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.ke_fang_qiang_bi_kai_guan_bottom
+
+        - type: button
+          position: 244, 127  #2-3插座
+          text: "Socket"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(guest_relay3_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: switch.turn_on
+                data:
+                  entity_id: switch.ke_fang_cha_zuo
+          on_turn_off:
+            - homeassistant.service:
+                service: switch.turn_off
+                data:
+                  entity_id: switch.ke_fang_cha_zuo
+                   
+                  
+############狀態連結
+
+
+text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
+  - platform: homeassistant #吸頂燈
+    id: guest_relay1_state
+    entity_id: light.ke_fang_qiang_bi_kai_guan_top
+
+  - platform: homeassistant #崁燈
+    id: guest_relay2_state
+    entity_id: light.ke_fang_qiang_bi_kai_guan_bottom
+    
+  - platform: homeassistant #插座
+    id: guest_relay3_state
+    entity_id: switch.ke_fang_cha_zuo
