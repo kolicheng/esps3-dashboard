@@ -43,7 +43,7 @@ screens:
             - homeassistant.service:
                 service: light.turn_off
                 data:
-                  entity_id: light.chu_fang_qiang_bi_kai_guan_top
+                  entity_id: light.ke_ting_qiang_bi_kai_guan_top
 
         - type: button
           position: 126, 127  #2-2崁燈
@@ -66,13 +66,13 @@ screens:
                   entity_id: light.ke_ting_qiang_bi_kai_guan_bottom
 
         - type: button
-          position: 244, 127  #2-3循環扇
+          position: 244, 127  #2-3風扇
           text: "Fan"
           icon: 󰈐
           toggle: true
           enabled: return true;
           checked: |-
-            if(id(ke_ting_cha_zuo_state).state == "on") { return 1; }
+            if(id(Living_relay3_state).state == "on") { return 1; }
             else { return 0; }
           on_turn_on:
             - homeassistant.service:
@@ -84,6 +84,46 @@ screens:
                 service: fan.turn_off
                 data:
                   entity_id: fan.ke_ting_cha_zuo
+
+        - type: button
+          position: 362, 127  #2-4餐桌吊燈
+          text: "Table"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(Living_relay4_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.can_ting_qiang_bi_kai_guan_top
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.can_ting_qiang_bi_kai_guan_top
+
+        - type: button
+          position: 8, 246  #3-1走道燈
+          text: "Aisle"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(Living_relay5_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.can_ting_qiang_bi_kai_guan_bottom
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.can_ting_qiang_bi_kai_guan_bottom
                   
                   
 ############狀態連結
@@ -98,5 +138,13 @@ text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
     entity_id: light.ke_ting_qiang_bi_kai_guan_bottom
 
   - platform: homeassistant #風扇
-    id: ke_ting_cha_zuo_state
+    id: Living_relay3_state
     entity_id: fan.ke_ting_cha_zuo
+
+  - platform: homeassistant #餐桌吊燈
+    id: Living_relay4_state
+    entity_id: light.can_ting_qiang_bi_kai_guan_top
+
+  - platform: homeassistant #走道燈
+    id: Living_relay5_state
+    entity_id: light.can_ting_qiang_bi_kai_guan_bottom

@@ -24,16 +24,9 @@ screens:
 ############實體開關        
 
 
-        - type: value-card 
-          position: 362, 8    #1-4 (冷氣狀態) 
-          enabled: return true;
-          text: "State"
-          value: |-
-             return id(climate_state_gue).state;    
-
         - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
-          position: 8, 127   #2-1 (冷氣狀態)       
-          dimensions: 228x110  
+          position: 126, 8   #1-2-3 (冷氣狀態)       
+          dimensions: 228x96
           text: "Guestroom"
           icon: 󰀛
           # toggle: true
@@ -41,6 +34,23 @@ screens:
           checked: |-
             if(id(climate_state_gue).state != "off") { return 1; }
             else { return 0; }
+
+        - type: value-card 
+          position: 362, 8    #1-4 (狀態) 
+          enabled: return true;
+          text: "State"
+          value: |-
+             return id(climate_state_gue).state;   
+
+        - type: button 
+          position: 8, 127   #2-1 (冷氣)          
+          text: "Cool"
+          icon: 󰾥
+          enabled: |-
+            return true;
+          checked: |-
+            if(id(climate_state_gue).state == "cool") { return 1; }
+            else { return 0; }            
           on_click:
             then:
             - homeassistant.service: 
@@ -84,7 +94,7 @@ screens:
                   entity_id: climate.ac_guest_room_climate   
 
         - type: button 
-          position: 362, 246  #2-4 (auto模式)           
+          position: 362, 127  #2-4 (auto模式)           
           text: "Auto"
           icon: 󰵢
           enabled: |-

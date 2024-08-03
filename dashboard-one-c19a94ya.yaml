@@ -815,7 +815,130 @@ ha_deck:
                 data:
                   entity_id: fan.ce_suo_qiang_bi_kai_guan_left
 
-           
+
+############頁面簡介 LIVINGROOM
+
+
+    - name: ${SCREEN_LIVINGROOM} #要改房間畫面名稱
+      widgets:
+        - type: button
+          position: 8, 8  #1-1 座標 返回主畫面
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_ROOMS"); 
+                
+                
+        - type: value-card  # 4
+          position:  8, 368
+          dimensions: 456x96     
+          text: "Livingroom" #要改房間名稱
+          #enabled: return true;
+
+        - type: button
+          position: 8, 127  #2-1吸頂燈
+          text: "Livingroom"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(Living_relay1_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.ke_ting_qiang_bi_kai_guan_top
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.ke_ting_qiang_bi_kai_guan_top
+
+        - type: button
+          position: 126, 127  #2-2崁燈
+          text: "Electric Cabinet"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(Living_relay2_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.ke_ting_qiang_bi_kai_guan_bottom
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.ke_ting_qiang_bi_kai_guan_bottom
+
+        - type: button
+          position: 244, 127  #2-3風扇
+          text: "Fan"
+          icon: 󰈐
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(Living_relay3_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: fan.turn_on
+                data:
+                  entity_id: fan.ke_ting_cha_zuo
+          on_turn_off:
+            - homeassistant.service:
+                service: fan.turn_off
+                data:
+                  entity_id: fan.ke_ting_cha_zuo
+
+        - type: button
+          position: 362, 127  #2-4餐桌吊燈
+          text: "Table"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(Living_relay4_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.can_ting_qiang_bi_kai_guan_top
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.can_ting_qiang_bi_kai_guan_top
+
+        - type: button
+          position: 8, 246  #3-1走道燈
+          text: "Aisle"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(Living_relay5_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.can_ting_qiang_bi_kai_guan_bottom
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.can_ting_qiang_bi_kai_guan_bottom
+
+
 ############頁面簡介 CLIMATE
 
 
@@ -899,29 +1022,40 @@ ha_deck:
           text: "LivingRoom Climate"
           #enabled: return true;
 
-        - type: value-card 
-          position: 362, 8    #1-4 (冷氣狀態) 
-          enabled: return true;
-          text: "State"
-          value: |-
-             return id(climate_state_liv).state;    
-
         - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
-          position: 8, 127   #2-1 (冷氣狀態)   
-          text: "Cool"
+          position: 126, 8   #1-2-3 (冷氣狀態)       
+          dimensions: 228x96
+          text: "Livingroom"
           icon: 󰀛
           # toggle: true
           enabled: return true;
           checked: |-
             if(id(climate_state_liv).state != "off") { return 1; }
             else { return 0; }
+
+        - type: value-card 
+          position: 362, 8    #1-4 (狀態) 
+          enabled: return true;
+          text: "State"
+          value: |-
+             return id(climate_state_liv).state;   
+
+        - type: button 
+          position: 8, 127   #2-1 (冷氣)          
+          text: "Cool"
+          icon: 󰾥
+          enabled: |-
+            return true;
+          checked: |-
+            if(id(climate_state_liv).state == "cool") { return 1; }
+            else { return 0; }            
           on_click:
             then:
             - homeassistant.service: 
                 service: climate.set_hvac_mode #把空調模式設置為冷氣
                 data: 
                   hvac_mode: "cool"
-                  entity_id: climate.ac_living_room_climate
+                  entity_id: climate.ac_living_room_climate       
                   
         - type: button 
           position: 126, 127  #2-2 (除溼)        
@@ -1004,10 +1138,13 @@ ha_deck:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
+          id: thermostat_infos
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_liv).state);
             return std::string(buff);
+          text: Set
+          icon: 󰔏
           enabled: return true;
 
         - type: button
@@ -1047,6 +1184,41 @@ ha_deck:
           text: "MainRoom Climate"
           #enabled: return true;
           
+        - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
+          position: 126, 8   #1-2-3 (冷氣狀態)       
+          dimensions: 228x96
+          text: "Mainroom"
+          icon: 󰀛
+          # toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(climate_state_mai).state != "off") { return 1; }
+            else { return 0; }
+
+        - type: value-card 
+          position: 362, 8    #1-4 (狀態) 
+          enabled: return true;
+          text: "State"
+          value: |-
+             return id(climate_state_mai).state;   
+
+        - type: button 
+          position: 8, 127   #2-1 (冷氣)          
+          text: "Cool"
+          icon: 󰾥
+          enabled: |-
+            return true;
+          checked: |-
+            if(id(climate_state_mai).state == "cool") { return 1; }
+            else { return 0; }            
+          on_click:
+            then:
+            - homeassistant.service: 
+                service: climate.set_hvac_mode #把空調模式設置為冷氣
+                data: 
+                  hvac_mode: "cool"
+                  entity_id: climate.ac_master_room_climate  
+
         - type: value-card 
           position: 362, 8    #1-4 (冷氣狀態) 
           enabled: return true;
@@ -1152,10 +1324,13 @@ ha_deck:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
+          id: thermostat_infos
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_mai).state);
             return std::string(buff);
+          text: Set
+          icon: 󰔏
           enabled: return true;
 
         - type: button
@@ -1195,29 +1370,22 @@ ha_deck:
           text: "KidsRoom Climate"
           #enabled: return true;
                     
-        - type: value-card 
-          position: 362, 8    #1-4 (冷氣狀態) 
-          enabled: return true;
-          text: "State"
-          value: |-
-             return id(climate_state_kid).state;    
-
-        - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
-          position: 8, 127   #2-1 (冷氣狀態)       
+        - type: button 
+          position: 8, 127   #2-1 (冷氣)          
           text: "Cool"
-          icon: 󰀛
-          # toggle: true
-          enabled: return true;
+          icon: 󰾥
+          enabled: |-
+            return true;
           checked: |-
-            if(id(climate_state_kid).state != "off") { return 1; }
-            else { return 0; }
+            if(id(climate_state_kid).state == "cool") { return 1; }
+            else { return 0; }            
           on_click:
             then:
             - homeassistant.service: 
                 service: climate.set_hvac_mode #把空調模式設置為冷氣
                 data: 
                   hvac_mode: "cool"
-                  entity_id: climate.ac_child_room_climate
+                  entity_id: climate.ac_child_room_climate 
                   
         - type: button 
           position: 126, 127  #2-2 (除溼)        
@@ -1300,10 +1468,13 @@ ha_deck:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
+          id: thermostat_infos
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_kid).state);
             return std::string(buff);
+          text: Set
+          icon: 󰔏
           enabled: return true;
 
         - type: button
@@ -1343,22 +1514,15 @@ ha_deck:
           text: "GuestRoom Climate"
           #enabled: return true;
           
-        - type: value-card 
-          position: 362, 8    #1-4 (冷氣狀態) 
-          enabled: return true;
-          text: "State"
-          value: |-
-             return id(climate_state_gue).state;    
-
-        - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
-          position: 8, 127   #2-1 (冷氣狀態)       
+        - type: button 
+          position: 8, 127   #2-1 (冷氣)          
           text: "Cool"
-          icon: 󰀛
-          # toggle: true
-          enabled: return true;
+          icon: 󰾥
+          enabled: |-
+            return true;
           checked: |-
-            if(id(climate_state_gue).state != "off") { return 1; }
-            else { return 0; }
+            if(id(climate_state_gue).state == "cool") { return 1; }
+            else { return 0; }            
           on_click:
             then:
             - homeassistant.service: 
@@ -1448,10 +1612,13 @@ ha_deck:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
+          id: thermostat_infos
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_gue).state);
             return std::string(buff);
+          text: Set
+          icon: 󰔏
           enabled: return true;
 
         - type: button
@@ -1645,6 +1812,26 @@ text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
   - platform: homeassistant #走道燈條
     id: liv_light_state
     entity_id: light.yeelight_strip6_0x12eed7e1
+
+  - platform: homeassistant #吸頂燈
+    id: Living_relay1_state
+    entity_id: light.ke_ting_qiang_bi_kai_guan_top
+
+  - platform: homeassistant #崁燈
+    id: Living_relay2_state
+    entity_id: light.ke_ting_qiang_bi_kai_guan_bottom
+
+  - platform: homeassistant #風扇
+    id: Living_relay3_state
+    entity_id: fan.ke_ting_cha_zuo
+
+  - platform: homeassistant #餐桌吊燈
+    id: Living_relay4_state
+    entity_id: light.can_ting_qiang_bi_kai_guan_top
+
+  - platform: homeassistant #走道燈
+    id: Living_relay5_state
+    entity_id: light.can_ting_qiang_bi_kai_guan_bottom
 
   - platform: homeassistant  #取得客廳冷氣state
     id: climate_state_liv
