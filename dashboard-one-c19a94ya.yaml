@@ -4,7 +4,7 @@ esphome:
   platformio_options:
     board_upload.maximum_ram_size: 327680
     board_upload.maximum_size: 16777216
-#    board_build.partitions: "/config/esphome/custom_partitions_3584.csv" 
+    board_build.partitions: "/config/esphome/custom_partitions_3584.csv" 
     board_build.arduino.memory_type: qio_opi
 
 esp32:
@@ -49,6 +49,7 @@ substitutions:
   SCREEN_CLIMATE_GUE: climate-gue
   SCREEN_LIVINGROOM: livingroom
   SCREEN_BALCONY: balcony
+  SCREEN_MEDIA: media
 
   
 ###################################################### 系統設定
@@ -110,8 +111,8 @@ ha_deck:
   id: deck
   main_screen: ${SCREEN_MAIN}  # 設備參數，**沒事別動**
   inactivity:
-    period: 60 # seconds 60秒回主畫面
-    blank_screen: false  #休眠黑畫面有效
+    period: 30 # seconds 60秒回主畫面
+    blank_screen: true  #休眠黑畫面有效
   on_inactivity_change:
     lambda:  |-
       if (x) {
@@ -167,17 +168,23 @@ ha_deck:
             lambda: id(deck).switch_screen("$SCREEN_FAVORITE");  # 按下跳到favorite頁面
 
         - type: button
-          # id: floors
           position: 126, 127 # 2-2 (進入房間主頁)
           text: "Rooms"
           icon: 󰠡
           enabled: return true;
           on_click:
             lambda: id(deck).switch_screen("$SCREEN_ROOMS");
+
+        - type: button
+          position: 244, 127 # 2-3 (進入媒體主頁)
+          text: "Media"
+          icon: 󰠡
+          enabled: return true;
+          on_click:
+            lambda: id(deck).switch_screen("$SCREEN_MEDIA");
             
         - type: button
-          # id: floors
-          position: 244, 127 # 2-2 (進入冷氣主頁)
+          position: 362, 127 # 2-4 (進入冷氣主頁)
           text: "Climate"
           icon: 󰠡
           enabled: return true;
@@ -212,6 +219,24 @@ ha_deck:
 
 ############頁面簡介 ROOMS
 
+
+    - name: ${SCREEN_ROOMS} #房間畫面
+      widgets:
+        - type: button
+          position: 8, 8  #1-1 座標 返回主畫面
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+                
+        - type: value-card  # 4
+          position:  8, 368
+          dimensions: 456x96     
+          text: "Rooms"
+          #enabled: return true;
 
         - type: button
           position: 8, 127  #2-1座標
@@ -449,7 +474,7 @@ ha_deck:
         - type: button
           position: 362, 246  #3-4其他
           text: "Other"
-          icon: 󰥾
+          icon: 󰁔
           enabled: |-
             return true;
           on_click:
@@ -1008,17 +1033,6 @@ ha_deck:
           text: "LivingRoom Climate"
           #enabled: return true;
 
-        - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
-          position: 126, 8   #1-2-3 (冷氣狀態)       
-          dimensions: 228x96
-          text: "Livingroom"
-          icon: 󰀛
-          # toggle: true
-          enabled: return true;
-          checked: |-
-            if(id(climate_state_liv).state != "off") { return 1; }
-            else { return 0; }
-
         - type: value-card 
           position: 362, 8    #1-4 (狀態) 
           enabled: return true;
@@ -1124,7 +1138,7 @@ ha_deck:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
-          id: thermostat_infos
+          id: thermostat_infos_liv
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_liv).state);
@@ -1169,17 +1183,6 @@ ha_deck:
           dimensions: 456x96     
           text: "MainRoom Climate"
           #enabled: return true;
-          
-        - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
-          position: 126, 8   #1-2-3 (冷氣狀態)       
-          dimensions: 228x96
-          text: "Mainroom"
-          icon: 󰀛
-          # toggle: true
-          enabled: return true;
-          checked: |-
-            if(id(climate_state_mai).state != "off") { return 1; }
-            else { return 0; }
 
         - type: value-card 
           position: 362, 8    #1-4 (狀態) 
@@ -1204,30 +1207,6 @@ ha_deck:
                 data: 
                   hvac_mode: "cool"
                   entity_id: climate.ac_master_room_climate  
-
-        - type: value-card 
-          position: 362, 8    #1-4 (冷氣狀態) 
-          enabled: return true;
-          text: "State"
-          value: |-
-             return id(climate_state_mai).state;    
-
-        - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
-          position: 8, 127   #2-1 (冷氣狀態)       
-          text: "Cool"
-          icon: 󰀛
-          # toggle: true
-          enabled: return true;
-          checked: |-
-            if(id(climate_state_mai).state != "off") { return 1; }
-            else { return 0; }
-          on_click:
-            then:
-            - homeassistant.service: 
-                service: climate.set_hvac_mode #把空調模式設置為冷氣
-                data: 
-                  hvac_mode: "cool"
-                  entity_id: climate.ac_master_room_climate
                   
         - type: button 
           position: 126, 127  #2-2 (除溼)        
@@ -1310,7 +1289,7 @@ ha_deck:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
-          id: thermostat_infos
+          id: thermostat_infos_mai
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_mai).state);
@@ -1356,6 +1335,13 @@ ha_deck:
           text: "KidsRoom Climate"
           #enabled: return true;
                     
+        - type: value-card 
+          position: 362, 8    #1-4 (狀態) 
+          enabled: return true;
+          text: "State"
+          value: |-
+             return id(climate_state_kid).state;   
+
         - type: button 
           position: 8, 127   #2-1 (冷氣)          
           text: "Cool"
@@ -1454,7 +1440,7 @@ ha_deck:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
-          id: thermostat_infos
+          id: thermostat_infos_kid
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_kid).state);
@@ -1500,6 +1486,13 @@ ha_deck:
           text: "GuestRoom Climate"
           #enabled: return true;
           
+        - type: value-card 
+          position: 362, 8    #1-4 (狀態) 
+          enabled: return true;
+          text: "State"
+          value: |-
+             return id(climate_state_gue).state;   
+
         - type: button 
           position: 8, 127   #2-1 (冷氣)          
           text: "Cool"
@@ -1598,7 +1591,7 @@ ha_deck:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
-          id: thermostat_infos
+          id: thermostat_infos_gue
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_gue).state);
@@ -1697,6 +1690,28 @@ ha_deck:
                 service: light.turn_off
                 data:
                   entity_id: light.yeelight_strip6_0x12eed7e1
+
+
+############頁面簡介 MEDIA
+
+
+    - name: ${SCREEN_MEDIA} #要改房間畫面名稱
+      widgets:
+        - type: button
+          position: 8, 8  #1-1 座標 返回MAIN頁面
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN"); 
+                
+        - type: value-card  # 4
+          position:  8, 368
+          dimensions: 456x96     
+          text: "Media" #要改房間名稱
+          #enabled: return true;
 
 
 ############狀態連結
