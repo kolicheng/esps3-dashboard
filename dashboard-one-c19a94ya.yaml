@@ -950,6 +950,68 @@ ha_deck:
                   entity_id: light.can_ting_qiang_bi_kai_guan_bottom
 
 
+############頁面簡介 BALCONY
+
+
+    - name: ${SCREEN_BALCONY} #要改房間畫面名稱
+      widgets:
+        - type: button
+          position: 8, 8  #1-1 座標 返回ROOMS頁面
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_ROOMS"); 
+                
+        - type: value-card  # 4
+          position:  8, 368
+          dimensions: 456x96     
+          text: "Balcony" #要改房間名稱
+          #enabled: return true;
+
+        - type: button
+          position: 8, 127  #2-1前陽台燈
+          text: "FrontBalcony"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(balcony_relay1_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.qian_yang_tai_qiang_bi_kai_guan_right
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.qian_yang_tai_qiang_bi_kai_guan_right
+
+        - type: button
+          position: 126, 127  #2-2後陽台燈
+          text: "BackBalcony"
+          icon: 󰥾
+          toggle: true
+          enabled: return true;
+          checked: |-
+            if(id(guest_relay2_state).state == "on") { return 1; }
+            else { return 0; }
+          on_turn_on:
+            - homeassistant.service:
+                service: light.turn_on
+                data:
+                  entity_id: light.chu_fang_qiang_bi_kai_guan_bottom
+          on_turn_off:
+            - homeassistant.service:
+                service: light.turn_off
+                data:
+                  entity_id: light.chu_fang_qiang_bi_kai_guan_bottom
+
+
 ############頁面簡介 CLIMATE
 
 
@@ -1765,17 +1827,33 @@ ha_deck:
                     entity_id: media_player.ke_ting
 
         - type: button
-          position: 126, 127  # 2-2 播放/暫停
-          icon: |-
-            return id(current_media) == "media_player.xiao_hai_fang" ? "󰐊" : "󰐊";
+          position: 126, 365  # 2-2 播放/暫停
+          icon: !lambda |-
+            if (id(current_media).empty()) {
+              return "󰐊";  // 播放圖標
+            } else {
+              auto call = id(homeassistant).api_call("media_player.entity", {{"entity_id", id(current_media)}});
+              if (call.success && call.result["state"] == "playing") {
+                return "󰏤";  // 暫停圖標
+              } else {
+                return "󰐊";  // 播放圖標
+              }
+            }
           enabled: |-
             return true;
           on_click:
             then:
-              - homeassistant.service:
-                  service: media_player.media_play_pause  # 根據播放器狀態切換播放和暫停
-                  data:
-                    entity_id: !lambda 'return id(current_media);'
+              - lambda: |-
+                  if (id(current_media).empty()) {
+                    ESP_LOGD("main", "No media selected");
+                  } else {
+                    auto call = id(homeassistant).api_call("media_player.entity", {{"entity_id", id(current_media)}});
+                    if (call.success && call.result["state"] == "playing") {
+                      id(homeassistant).call_service("media_player.media_pause", {{"entity_id", id(current_media)}});
+                    } else {
+                      id(homeassistant).call_service("media_player.media_play", {{"entity_id", id(current_media)}});
+                    }
+                  }
                   
         - type: button
           position: 8, 246  # 3-1 關機
@@ -1951,6 +2029,14 @@ text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
   - platform: homeassistant #走道燈
     id: Living_relay5_state
     entity_id: light.can_ting_qiang_bi_kai_guan_bottom
+
+  - platform: homeassistant #前陽台燈
+    id: balcony_relay1_state
+    entity_id: light.ke_fang_qiang_bi_kai_guan_top
+
+  - platform: homeassistant #後陽台燈
+    id: balcony_relay2_state
+    entity_id: light.chu_fang_qiang_bi_kai_guan_bottom
 
   - platform: homeassistant  #取得客廳冷氣state
     id: climate_state_liv

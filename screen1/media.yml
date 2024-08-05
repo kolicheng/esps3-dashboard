@@ -76,17 +76,33 @@ screen:
                     entity_id: media_player.ke_ting
 
         - type: button
-          position: 126, 127  # 2-2 播放/暫停
-          icon: |-
-            return id(current_media) == "media_player.xiao_hai_fang" ? "󰐊" : "󰐊";
+          position: 126, 365  # 2-2 播放/暫停
+          icon: !lambda |-
+            if (id(current_media).empty()) {
+              return "󰐊";  // 播放圖標
+            } else {
+              auto call = id(homeassistant).api_call("media_player.entity", {{"entity_id", id(current_media)}});
+              if (call.success && call.result["state"] == "playing") {
+                return "󰏤";  // 暫停圖標
+              } else {
+                return "󰐊";  // 播放圖標
+              }
+            }
           enabled: |-
             return true;
           on_click:
             then:
-              - homeassistant.service:
-                  service: media_player.media_play_pause  # 根據播放器狀態切換播放和暫停
-                  data:
-                    entity_id: !lambda 'return id(current_media);'
+              - lambda: |-
+                  if (id(current_media).empty()) {
+                    ESP_LOGD("main", "No media selected");
+                  } else {
+                    auto call = id(homeassistant).api_call("media_player.entity", {{"entity_id", id(current_media)}});
+                    if (call.success && call.result["state"] == "playing") {
+                      id(homeassistant).call_service("media_player.media_pause", {{"entity_id", id(current_media)}});
+                    } else {
+                      id(homeassistant).call_service("media_player.media_play", {{"entity_id", id(current_media)}});
+                    }
+                  }
                   
         - type: button
           position: 8, 246  # 3-1 關機
