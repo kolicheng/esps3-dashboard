@@ -24,17 +24,6 @@ screens:
 ############實體開關        
 
 
-        - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
-          position: 126, 8   #1-2-3 (冷氣狀態)       
-          dimensions: 228x96
-          text: "Mainroom"
-          icon: 󰀛
-          # toggle: true
-          enabled: return true;
-          checked: |-
-            if(id(climate_state_mai).state != "off") { return 1; }
-            else { return 0; }
-
         - type: value-card 
           position: 362, 8    #1-4 (狀態) 
           enabled: return true;
@@ -58,30 +47,6 @@ screens:
                 data: 
                   hvac_mode: "cool"
                   entity_id: climate.ac_master_room_climate  
-
-        - type: value-card 
-          position: 362, 8    #1-4 (冷氣狀態) 
-          enabled: return true;
-          text: "State"
-          value: |-
-             return id(climate_state_mai).state;    
-
-        - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
-          position: 8, 127   #2-1 (冷氣狀態)       
-          text: "Cool"
-          icon: 󰀛
-          # toggle: true
-          enabled: return true;
-          checked: |-
-            if(id(climate_state_mai).state != "off") { return 1; }
-            else { return 0; }
-          on_click:
-            then:
-            - homeassistant.service: 
-                service: climate.set_hvac_mode #把空調模式設置為冷氣
-                data: 
-                  hvac_mode: "cool"
-                  entity_id: climate.ac_master_room_climate
                   
         - type: button 
           position: 126, 127  #2-2 (除溼)        
@@ -164,7 +129,7 @@ screens:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
-          id: thermostat_infos
+          id: thermostat_infos_mai
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_mai).state);

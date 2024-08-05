@@ -1,4 +1,5 @@
 ############頁面簡介 MEDIA
+screen:
 
 
     - name: ${SCREEN_MEDIA} #要改房間畫面名稱
@@ -24,102 +25,108 @@
 
 
         - type: button
-          position: 126, 8  #1-2 媒體1
-          icon: 󰏤
+          position: 126, 8  # 1-2 媒體1
+          icon: 󱀞
+          text: "Kidsroom" # 要改房間名稱
           enabled: return true;
+          checked: |-
+            if(id(media_kids_state).state == "on") { return 1; }
+            else { return 0; }    
           on_click:
             then:
+              - lambda: |-
+                  id(current_media) = "media_player.xiao_hai_fang";
               - homeassistant.service:
                   service: media_player.turn_on
                   data:
                     entity_id: media_player.xiao_hai_fang
 
-
         - type: button
-          position: 126, 127  #1-3 媒體2
-          icon: 󰏤
+          position: 244, 8  # 1-3 媒體2
+          icon: 󱀞
+          text: "Mainroom" # 要改房間名稱
           enabled: return true;
+          checked: |-
+            if(id(media_liv_state).state == "on") { return 1; }
+            else { return 0; }    
           on_click:
             then:
+              - lambda: |-
+                  id(current_media) = "media_player.zhu_wo_shi";
               - homeassistant.service:
                   service: media_player.turn_on
                   data:
                     entity_id: media_player.zhu_wo_shi
 
         - type: button
-          position: 126, 127  #1-4 媒體3
-          icon: 󰏤
+          position: 362, 8  # 1-4 媒體3
+          icon: 󱀞
+          text: "Livingroom" # 要改房間名稱
           enabled: return true;
+          checked: |-
+            if(id(media_main_state).state == "on") { return 1; }
+            else { return 0; }    
           on_click:
             then:
+              - lambda: |-
+                  id(current_media) = "media_player.ke_ting";
               - homeassistant.service:
                   service: media_player.turn_on
                   data:
                     entity_id: media_player.ke_ting
 
         - type: button
-          position: 126, 127  #2-2 暫停
-          icon: 󰏤
+          position: 126, 127  # 2-2 播放/暫停
+          icon: |-
+            return id(current_media) == "media_player.xiao_hai_fang" ? "󰐊" : "󰐊";
           enabled: |-
             return true;
           on_click:
             then:
               - homeassistant.service:
-                  service: media_player.media_pause #暫停播放
+                  service: media_player.media_play_pause  # 根據播放器狀態切換播放和暫停
                   data:
-                    entity_id: media_player.ke_ting    
-
+                    entity_id: !lambda 'return id(current_media);'
+                  
         - type: button
-          position: 244, 127  #2-3 播放
-          icon: 󰐊
-          enabled: |-
-            return true;
-          on_click:
-            then:
-              - homeassistant.service:
-                  service: media_player.play_media  #繼續播放
-                  data:
-                    entity_id: media_player.ke_ting    
-
-        - type: button
-          position: 362, 127  #2-4 靜音
-          icon: 󰖁
-          enabled: |-
-            return true;
-          on_click:
-            then:
-              - homeassistant.service:
-                  service: media_player.volume_set #音量=0 靜音
-                  data:
-                    volume_level: "0"
-                    entity_id: media_player.ke_ting 
-
-        - type: button
-          position: 8, 246  #3-1 關機
+          position: 8, 246  # 3-1 關機
           icon: 󰐥
           enabled: |-
             return true;
           on_click:
             then:
               - homeassistant.service:
-                  service: media_player.turn_off  #關閉播放器
+                  service: media_player.turn_off  # 關閉播放器
                   data:
-                    entity_id: media_player.ke_ting
+                    entity_id: !lambda 'return id(current_media);'
 
         - type: button
-          position: 244, 246  #4-3 聲音大
+          position: 126, 246  # 4-2 靜音
+          icon: 󰖁
+          enabled: |-
+            return true;
+          on_click:
+            then:
+              - homeassistant.service:
+                  service: media_player.volume_set # 音量=0 靜音
+                  data:
+                    volume_level: "0"
+                    entity_id: !lambda 'return id(current_media);'
+
+        - type: button
+          position: 244, 246  # 4-3 聲音大
           icon: 󰝝
           enabled: |-
             return true;
           on_click:
             then:
               - homeassistant.service:
-                  service: media_player.volume_up  #提高音量
+                  service: media_player.volume_up  # 提高音量
                   data:
-                    entity_id: media_player.ke_ting   
+                    entity_id: !lambda 'return id(current_media);'
 
         - type: button
-          position: 362, 246 #3-4 聲音小
+          position: 362, 246 # 3-4 聲音小
           icon: 󰝞
           enabled: |-
             return true;
@@ -128,21 +135,26 @@
               - homeassistant.service:
                   service: media_player.volume_down  
                   data:
-                    entity_id: media_player.ke_ting  #降低音量
+                    entity_id: !lambda 'return id(current_media);'
                    
                   
 ############狀態連結
 
 
-text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
-  - platform: homeassistant #吸頂燈
-    id: guest_relay1_state
-    entity_id: light.ke_fang_qiang_bi_kai_guan_top
+globals:
+  - id: current_media
+    type: std::string
+    initial_value: '""'
 
-  - platform: homeassistant #崁燈
-    id: guest_relay2_state
-    entity_id: light.ke_fang_qiang_bi_kai_guan_bottom
-    
-  - platform: homeassistant #插座
-    id: guest_relay3_state
-    entity_id: switch.ke_fang_cha_zuo
+text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
+  - platform: homeassistant
+    id: media_kids_state
+    entity_id: media_player.xiao_hai_fang
+
+  - platform: homeassistant
+    id: media_liv_state
+    entity_id: media_player.ke_ting
+
+  - platform: homeassistant  
+    id: media_main_state
+    entity_id: media_player.zhu_wo_shi

@@ -24,17 +24,6 @@ screens:
 ############實體開關        
 
 
-        - type: button   #照理說是要用value-card，為了有開機狀態底色，所以用 button來處理，並取消觸發功能。
-          position: 126, 8   #1-2-3 (冷氣狀態)       
-          dimensions: 228x96
-          text: "Guestroom"
-          icon: 󰀛
-          # toggle: true
-          enabled: return true;
-          checked: |-
-            if(id(climate_state_gue).state != "off") { return 1; }
-            else { return 0; }
-
         - type: value-card 
           position: 362, 8    #1-4 (狀態) 
           enabled: return true;
@@ -140,7 +129,7 @@ screens:
 
         - type: value-card
           position: 244, 246 #3-3 顯示目前設定溫度
-          id: thermostat_infos
+          id: thermostat_infos_gue
           value: |-
             char buff[10] = "-";
             sprintf(buff, "%.1f", id(climate_set_gue).state);
