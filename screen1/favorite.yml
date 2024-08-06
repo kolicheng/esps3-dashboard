@@ -1,5 +1,4 @@
 ############頁面簡介 FAVORITE
-screens:
 
 
     - name: ${SCREEN_FAVORITE}  #調整參數畫面

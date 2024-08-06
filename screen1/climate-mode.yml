@@ -1,0 +1,93 @@
+############頁面簡介 CLIMATE-MODE
+
+
+    - name: ${SCREEN_CLIMATEMODE} # 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
+      widgets:
+        - type: button
+          position: 8, 8     #1-1 座標 返回主畫面
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_CLIMATE");
+                
+        - type: value-card  # 4
+          position:  8, 368
+          dimensions: 456x96     
+          text: "Climate Mode"
+          #enabled: return true;
+               
+
+############實體開關        
+
+
+        - type: button 
+          position: 8, 127   # 2-1 (冷氣)          
+          text: "Cool"
+          icon: 󰾥
+          enabled: return true;
+          checked: |-
+            if(id(selected_ac) == "cool") { return 1; }
+            else { return 0; }            
+          on_click:
+            then:
+              - homeassistant.service: 
+                  service: climate.set_hvac_mode
+                  data: 
+                    hvac_mode: "cool"
+                    entity_id: !lambda 'return id(selected_ac_entity);'
+
+        - type: button 
+          position: 126, 127  # 2-2 (除溼)        
+          text: "Dry"
+          icon: 󰖎
+          enabled: return true;
+          checked: |-
+            if(id(selected_ac) == "dry") { return 1; }
+            else { return 0; }             
+          on_click:
+            then:
+              - homeassistant.service: 
+                  service: climate.set_hvac_mode
+                  data: 
+                    hvac_mode: "dry"
+                    entity_id: !lambda 'return id(selected_ac_entity);'
+
+        - type: button 
+          position: 244, 127   # 2-3 (送風)       
+          text: "Fan Only"
+          icon: 󰈐
+          enabled: return true;
+          checked: |-
+            if(id(selected_ac) == "fan_only") { return 1; }
+            else { return 0; }             
+          on_click:
+            then:
+              - homeassistant.service: 
+                  service: climate.set_hvac_mode
+                  data: 
+                    hvac_mode: "fan_only"
+                    entity_id: !lambda 'return id(selected_ac_entity);'
+
+        - type: button 
+          position: 362, 127  # 2-4 (auto模式)           
+          text: "Auto"
+          icon: 󰵢
+          enabled: return true;
+          checked: |-
+            if(id(selected_ac_fan_mode).state == "auto" && id(selected_ac).state != "off") { return 1; }
+            else { return 0; }            
+          on_click:
+            then:
+              - homeassistant.service: 
+                  service: climate.set_fan_mode
+                  data: 
+                    fan_mode: "auto"
+                    entity_id: !lambda 'return id(selected_ac_entity);'
+                   
+                  
+############狀態連結
+
+	

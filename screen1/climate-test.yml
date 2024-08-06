@@ -1,0 +1,220 @@
+############頁面簡介 CLIMATE
+
+
+    - name: ${SCREEN_CLIMATE} # 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
+      widgets:
+        - type: button
+          position: 8, 8     #1-1 座標 返回主畫面
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+               
+        - type: value-card  # 4
+          position:  8, 368
+          dimensions: 456x96     
+          text: "Climate"
+          #enabled: return true;
+
+        - type: button
+          position: 362, 8     #1-4 座標 MODE
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_CLIMATEMODE");
+
+############實體開關        
+
+
+        - type: button
+          position: 8, 127  # 2-1 空調1
+          text: "Mainroom"
+          icon: 󰕾
+          enabled: return true;
+          on_click:
+            then:
+              - script.execute: select_ac_1
+
+        - type: button
+          position: 126, 127  # 2-2 空調2
+          text: "Livingroom"
+          icon: 󰕾
+          enabled: return true;
+          on_click:
+            then:
+              - script.execute: select_ac_2
+
+        - type: button
+          position: 244, 127  # 2-3 空調3
+          text: Kidsroom"
+          icon: 󰕾
+          enabled: return true;
+          on_click:
+            then:
+              - script.execute: select_ac_3
+
+        - type: button
+          position: 362, 127  # 2-4 空調4
+          text: "Guestroom"
+          icon: 󰕾
+          enabled: return true;
+          on_click:
+            then:
+              - script.execute: select_ac_4
+
+        - type: button
+          position: 8, 246  # 3-1 關機
+          icon: 󰐥
+          enabled: return true;
+          on_click:
+            then:
+              - homeassistant.service: 
+                  service: climate.set_hvac_mode
+                  data: 
+                    hvac_mode: "off"
+                    entity_id: !lambda 'return id(selected_ac_entity);'
+
+        - type: button
+          position: 126, 246 # 3-2 溫度下降
+          icon: 󰁅
+          enabled: return true;
+          on_click:
+            then:
+              - homeassistant.service:
+                  service: climate.set_temperature
+                  data:
+                    entity_id: !lambda 'return id(selected_ac_entity);'
+                  data_template:
+                    temperature: '{{ my_variable }}'
+                  variables:
+                    my_variable: |-
+                      return id(selected_ac_set_temperature) - 1;
+
+        - type: value-card
+          position: 244, 246 # 3-3 顯示目前設定溫度
+          id: thermostat_infos
+          value: |-
+            char buff[10] = "-";
+            sprintf(buff, "%.1f", id(selected_ac_set_temperature));
+            return std::string(buff);
+          text: Set
+          icon: 󰔏
+          enabled: return true;
+
+        - type: button
+          position: 362, 246 # 3-4 溫度上升
+          icon: 󰁝
+          enabled: return true;
+          on_click:
+            then:
+              - homeassistant.service:
+                  service: climate.set_temperature
+                  data:
+                    entity_id: !lambda 'return id(selected_ac_entity);'
+                  data_template:
+                    temperature: '{{ my_variable }}'
+                  variables:
+                    my_variable: |-
+                      return id(selected_ac_set_temperature) + 1;
+                   
+                  
+############狀態連結
+
+
+sensor:
+  - platform: homeassistant
+    id: climate_set_ac1
+    entity_id: climate.ac_master_room_climate
+    attribute: temperature
+
+  - platform: homeassistant
+    id: climate_set_ac2
+    entity_id: climate.ac_living_room_climate
+    attribute: temperature
+
+  - platform: homeassistant
+    id: climate_set_ac3
+    entity_id: climate.ac_child_room_climate
+    attribute: temperature
+
+  - platform: homeassistant
+    id: climate_set_ac4
+    entity_id: climate.ac_guest_room_climate
+    attribute: temperature
+
+
+############特殊控制腳本
+
+script:
+# 主臥房
+  - id: select_ac_1
+    then:
+      - lambda: |-
+          id(selected_ac) = "climate.ac_master_room_climate";
+          id(selected_ac_entity) = "climate.ac_master_room_climate";
+          id(selected_ac_set_temperature) = id(climate_set_ac1);
+
+# 客廳
+  - id: select_ac_2
+    then:
+      - lambda: |-
+          id(selected_ac) = "climate.ac_living_room_climate";
+          id(selected_ac_entity) = "climate.ac_living_room_climate";
+          id(selected_ac_set_temperature) = id(climate_set_ac2);
+
+# 小孩房
+  - id: select_ac_3
+    then:
+      - lambda: |-
+          id(selected_ac) = "climate.ac_child_room_climate";
+          id(selected_ac_entity) = "climate.ac_child_room_climate";
+          id(selected_ac_set_temperature) = id(climate_set_ac3);
+
+# 客房
+  - id: select_ac_3
+    then:
+      - lambda: |-
+          id(selected_ac) = "climate.ac_guest_room_climate";
+          id(selected_ac_entity) = "climate.ac_guest_room_climate";
+          id(selected_ac_set_temperature) = id(climate_set_ac4);
+
+
+############全域參數
+
+
+globals:
+  - id: selected_ac
+    type: std::string
+    restore_value: no
+    initial_value: '"climate.ac_master_room_climate"'
+  - id: selected_ac_entity
+    type: std::string
+    restore_value: no
+    initial_value: '"climate.ac_master_room_climate"'
+
+  - id: selected_ac_set_temperature
+    type: float
+    restore_value: no
+    initial_value: '28.0'
+  - id: climate_set_ac1
+    type: float
+    restore_value: no
+    initial_value: '28.0'
+  - id: climate_set_ac2
+    type: float
+    restore_value: no
+    initial_value: '28.0'
+  - id: climate_set_ac3
+    type: float
+    restore_value: no
+    initial_value: '28.0'
+  - id: climate_set_ac4
+    type: float
+    restore_value: no
+    initial_value: '28.0'

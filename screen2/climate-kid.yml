@@ -52,7 +52,7 @@ screens:
                 service: climate.set_hvac_mode #把空調模式設置為冷氣
                 data: 
                   hvac_mode: "cool"
-                  entity_id: climate.ac_child_room_climate 
+                  entity_id: climate.ac_child_room_climate
                   
         - type: button 
           position: 126, 127  #2-2 (除溼)        

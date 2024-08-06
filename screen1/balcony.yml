@@ -1,5 +1,4 @@
 ############頁面簡介 BALCONY
-screens:
 
 
     - name: ${SCREEN_BALCONY} #要改房間畫面名稱

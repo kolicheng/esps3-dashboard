@@ -1,8 +1,7 @@
 ############頁面簡介 CLIMATE
-screens:
 
 
-    - name: ${SCREEN_CLIMATE# 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
+    - name: ${SCREEN_CLIMATE} # 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
       widgets:
         - type: button
           position: 8, 8     #1-1 座標 返回主畫面
