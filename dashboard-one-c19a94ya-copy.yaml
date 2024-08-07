@@ -1429,36 +1429,7 @@ ha_deck:
                     entity_id: media_player.ke_ting
 
         - type: button
-          position: 126, 365  # 2-2 播放/暫停
-          icon: !lambda |-
-            if (id(current_media).empty()) {
-              return "󰐊";  // 播放圖標
-            } else {
-              auto call = id(homeassistant).api_call("media_player.entity", {{"entity_id", id(current_media)}});
-              if (call.success && call.result["state"] == "playing") {
-                return "󰏤";  // 暫停圖標
-              } else {
-                return "󰐊";  // 播放圖標
-              }
-            }
-          enabled: |-
-            return true;
-          on_click:
-            then:
-              - lambda: |-
-                  if (id(current_media).empty()) {
-                    ESP_LOGD("main", "No media selected");
-                  } else {
-                    auto call = id(homeassistant).api_call("media_player.entity", {{"entity_id", id(current_media)}});
-                    if (call.success && call.result["state"] == "playing") {
-                      id(homeassistant).call_service("media_player.media_pause", {{"entity_id", id(current_media)}});
-                    } else {
-                      id(homeassistant).call_service("media_player.media_play", {{"entity_id", id(current_media)}});
-                    }
-                  }
-                  
-        - type: button
-          position: 8, 246  # 3-1 關機
+          position: 8, 127  # 3-1 關機
           icon: 󰐥
           enabled: |-
             return true;
@@ -1466,6 +1437,30 @@ ha_deck:
             then:
               - homeassistant.service:
                   service: media_player.turn_off  # 關閉播放器
+                  data:
+                    entity_id: !lambda 'return id(current_media);'
+
+        - type: button
+          position: 126, 127  # 2-2 暫停
+          icon: 󰏤
+          enabled: |-
+            return true;
+          on_click:
+            then:
+              - homeassistant.service:
+                  service: media_player.media_pause # 暫停播放
+                  data:
+                    entity_id: !lambda 'return id(current_media);'
+
+        - type: button
+          position: 244, 127  # 2-3 播放
+          icon: 󰐊
+          enabled: |-
+            return true;
+          on_click:
+            then:
+              - homeassistant.service:
+                  service: media_player.play_media  # 繼續播放
                   data:
                     entity_id: !lambda 'return id(current_media);'
 
