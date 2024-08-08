@@ -19,10 +19,6 @@ screen:
           dimensions: 456x96     
           text: "Media" #要改房間名稱
           #enabled: return true;
-               
-
-############實體開關        
-
 
         - type: button
           position: 126, 127  # 2-2 媒體1

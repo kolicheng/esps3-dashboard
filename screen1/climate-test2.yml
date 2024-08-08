@@ -1,0 +1,94 @@
+############頁面簡介 CLIMATE
+
+
+    - name: ${SCREEN_CLIMATE} # 各家空調功能不一，詳見HA裡面entity自帶的屬性內容
+      widgets:
+        - type: button
+          position: 8, 8     #1-1 座標 返回主畫面
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+
+        - type: value-card 
+          position: 362, 8    #1-4 (狀態) 
+          enabled: return true;
+          text: "State"
+          value: |-
+             return id(climate_state_mai).state;
+
+        - type: button
+          position: 8, 127  # 2-1 空調1
+          text: "Mainroom"
+          icon: 󰕾
+          enabled: return true;
+
+        - type: button
+          position: 126, 127  # 2-2 空調2
+          text: "Livingroom"
+          icon: 󰕾
+          enabled: return true;
+
+        - type: button
+          position: 244, 127  # 2-3 空調3
+          text: Kidsroom"
+          icon: 󰕾
+          enabled: return true;
+
+        - type: button
+          position: 362, 127  # 2-4 空調4
+          text: "Guestroom"
+          icon: 󰕾
+          enabled: return true;
+
+        - type: button 
+          position: 8, 246   # 3-1 (冷氣)          
+          text: "Cool"
+          icon: 󰾥
+          enabled: return true;
+
+        - type: button 
+          position: 126, 246  # 3-2 (除溼)        
+          text: "Dry"
+          icon: 󰖎
+          enabled: return true;
+
+        - type: button 
+          position: 244, 246   # 3-3 (送風)       
+          text: "Fan Only"
+          icon: 󰈐
+          enabled: return true;
+
+        - type: button 
+          position: 362, 246  #3-4 (auto模式)           
+          text: "Auto"
+          icon: 󰵢
+          enabled: |-
+            return true;
+
+        - type: button
+          position: 8, 368  # 4-1 關機
+          icon: 󰐥
+          enabled: return true;
+
+        - type: button
+          position: 126, 368 # 4-2 溫度下降
+          icon: 󰁅
+          enabled: return true;
+
+        - type: value-card
+          position: 244, 368 # 4-3 顯示目前設定溫度
+          id: thermostat_infos
+          text: Set
+          icon: 󰔏
+          enabled: return true;
+
+        - type: button
+          position: 362, 368 # 4-4 溫度上升
+          icon: 󰁝
+          enabled: return true;
+
+############狀態連結

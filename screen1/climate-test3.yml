@@ -1,0 +1,310 @@
+############頁面簡介 CLIMATE
+
+
+    - name: ${SCREEN_CLIMATE}
+      widgets:
+        - type: button
+          position: 8, 8     #1-1 座標 返回主畫面
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+            
+        - type: value-card 
+          position: 362, 8    #1-4 (狀態) 
+          enabled: return true;
+          text: "State"
+          value: |-
+            return id(current_climate_state).c_str();  
+
+        - type: button 
+          position: 8, 127   #2-1 (冷氣)         
+          text: "Cool"
+          icon: 󰾥
+          enabled: |-
+            return true;
+          checked: |-
+            if(id(current_climate_state).c_str() == "cool") { return 1; }
+            else { return 0; }            
+          on_click:
+            then:
+            - homeassistant.service: 
+                service: climate.set_hvac_mode
+                data: 
+                  hvac_mode: "cool"
+                  entity_id: !lambda 'return id(selected_ac);'
+              
+        - type: button 
+          position: 126, 127  #2-2 (除溼)        
+          text: "Dry"
+          icon: 󰖎
+          enabled: |-
+            return true;
+          checked: |-
+            if(id(current_climate_state).c_str() == "dry") { return 1; }
+            else { return 0; }             
+          on_click:
+            then:
+            - homeassistant.service: 
+                service: climate.set_hvac_mode
+                data: 
+                  hvac_mode: "dry"
+                  entity_id: !lambda 'return id(selected_ac);'
+
+        - type: button 
+          position: 244, 127   #2-3 (送風)       
+          text: "Fan Only"
+          icon: 󰈐
+          enabled: |-
+            return true;
+          checked: |-
+            if(id(current_climate_state).c_str() == "fan_only") { return 1; }
+            else { return 0; }             
+          on_click:
+            then:
+            - homeassistant.service: 
+                service: climate.set_hvac_mode
+                data: 
+                  hvac_mode: "fan_only"
+                  entity_id: !lambda 'return id(selected_ac);'
+
+        - type: button 
+          position: 362, 127  #2-4 (auto模式)           
+          text: "Auto"
+          icon: 󰵢
+          enabled: |-
+            return true;
+          checked: |-
+            if(id(current_climate_fan_mode).c_str() == "auto" && id(current_climate_state).c_str() != "off") { return 1; }
+            else { return 0; }            
+          on_click:
+            then:
+            - homeassistant.service: 
+                service: climate.set_fan_mode
+                data: 
+                  fan_mode: "auto"
+                  entity_id: !lambda 'return id(selected_ac);'
+
+        - type: button
+          position: 8, 246  #3-1 關機
+          icon: 󰐥
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - homeassistant.service: 
+                service: climate.set_hvac_mode
+                data: 
+                  hvac_mode: "off"
+                  entity_id: !lambda 'return id(selected_ac);'
+              
+        - type: button
+          position: 126, 246 #3-2 溫度下降
+          icon: 󰁅
+          enabled: return true;
+          on_click:
+            - homeassistant.service:
+                service: climate.set_temperature
+                data:
+                  entity_id: !lambda 'return id(selected_ac);'
+                data_template:
+                  temperature: '{{ my_variable }}'
+                variables:
+                  my_variable: |-
+                    return id(current_climate_set_temp) - 1;
+
+        - type: value-card
+          position: 244, 246 #3-3 顯示目前設定溫度
+          id: thermostat_infos_selected
+          value: |-
+            char buff[10] = "-";
+            sprintf(buff, "%.1f", id(current_climate_set_temp));
+            return std::string(buff);
+          text: Set
+          icon: 󰔏
+          enabled: return true;
+
+        - type: button
+          position: 362, 246 #4-4 溫度上升
+          icon: 󰁝
+          enabled: return true;
+          on_click:
+            - homeassistant.service:
+                service: climate.set_temperature
+                data:
+                  entity_id: !lambda 'return id(selected_ac);'
+                data_template:
+                  temperature: '{{ my_variable }}'
+                variables:
+                  my_variable: |-
+                    return id(current_climate_set_temp) + 1;
+
+        - type: button
+          position: 8, 127 # 空調1
+          text: "AC1"
+          enabled: |-
+            return true;
+          on_click:
+            then:
+              - lambda: |-
+                  id(selected_ac) = "climate.ac_master_room_climate";
+                  id(current_climate_state).publish_state(id(climate_state_ac1).state);
+                  id(current_climate_fan_mode).publish_state(id(climate_fan_mode_ac1).state);
+                  id(current_climate_set_temp).publish_state(id(climate_set_temp_ac1).state);
+                  id(current_climate_current_temp).publish_state(id(climate_current_temp_ac1).state);
+
+        - type: button
+          position: 126, 127 # 空調2
+          text: "AC2"
+          enabled: |-
+            return true;
+          on_click:
+            then:
+              - lambda: |-
+                  id(selected_ac) = "climate.ac_living_room_climate";
+                  id(current_climate_state).publish_state(id(climate_state_ac2).state);
+                  id(current_climate_fan_mode).publish_state(id(climate_fan_mode_ac2).state);
+                  id(current_climate_set_temp).publish_state(id(climate_set_temp_ac2).state);
+                  id(current_climate_current_temp).publish_state(id(climate_current_temp_ac2).state);
+
+        - type: button
+          position: 244, 127 # 空調3
+          text: "AC3"
+          enabled: |-
+            return true;
+          on_click:
+            then:
+              - lambda: |-
+                  id(selected_ac) = "climate.ac_child_room_climate";
+                  id(current_climate_state).publish_state(id(climate_state_ac3).state);
+                  id(current_climate_fan_mode).publish_state(id(climate_fan_mode_ac3).state);
+                  id(current_climate_set_temp).publish_state(id(climate_set_temp_ac3).state);
+                  id(current_climate_current_temp).publish_state(id(climate_current_temp_ac3).state);
+
+        - type: button
+          position: 362, 127 # 空調4
+          text: "AC4"
+          enabled: |-
+            return true;
+          on_click:
+            then:
+              - lambda: |-
+                  id(selected_ac) = "climate.ac_living_room_climate";
+                  id(current_climate_state).publish_state(id(climate_state_ac4).state);
+                  id(current_climate_fan_mode).publish_state(id(climate_fan_mode_ac4).state);
+                  id(current_climate_set_temp).publish_state(id(climate_set_temp_ac4).state);
+                  id(current_climate_current_temp).publish_state(id(climate_current_temp_ac4).state);
+
+
+############狀態連結
+
+
+globals:
+  - id: selected_ac
+    type: std::string
+    initial_value: "climate.ac_master_room_climate"
+
+  - id: current_climate_state
+    type: std::string
+    initial_value: "off"
+
+  - id: current_climate_fan_mode
+    type: std::string
+    initial_value: "auto"
+
+  - id: current_climate_set_temp
+    type: float
+    initial_value: 22.0
+
+  - id: current_climate_current_temp
+    type: float
+    initial_value: 22.0
+
+text_sensor:
+  - platform: homeassistant
+    id: climate_state_ac1
+    entity_id: "climate.ac_master_room_climate"
+
+  - platform: homeassistant
+    id: climate_state_ac2
+    entity_id: "climate.ac_living_room_climate"
+
+  - platform: homeassistant
+    id: climate_state_ac3
+    entity_id: "climate.ac_child_room_climate"
+
+  - platform: homeassistant
+    id: climate_state_ac4
+    entity_id: "climate.ac_living_room_climate"
+
+  - platform: homeassistant
+    id: climate_fan_mode_ac1
+    entity_id: "climate.ac_master_room_climate"
+    attribute: fan_mode
+
+  - platform: homeassistant
+    id: climate_fan_mode_ac2
+    entity_id: "climate.ac_living_room_climate"
+    attribute: fan_mode
+
+  - platform: homeassistant
+    id: climate_fan_mode_ac3
+    entity_id: "climate.ac_child_room_climate"
+    attribute: fan_mode
+
+  - platform: homeassistant
+    id: climate_fan_mode_ac4
+    entity_id: "climate.ac_living_room_climate"
+    attribute: fan_mode
+
+sensor:
+  - platform: homeassistant
+    id: climate_current_temp_ac1
+    entity_id: "climate.ac_master_room_climate"
+    attribute: current_temperature
+    unit_of_measurement: "°C"
+
+  - platform: homeassistant
+    id: climate_current_temp_ac2
+    entity_id: "climate.ac_living_room_climate"
+    attribute: current_temperature
+    unit_of_measurement: "°C"
+
+  - platform: homeassistant
+    id: climate_current_temp_ac3
+    entity_id: "climate.ac_child_room_climate"
+    attribute: current_temperature
+    unit_of_measurement: "°C"
+
+  - platform: homeassistant
+    id: climate_current_temp_ac4
+    entity_id: "climate.ac_living_room_climate"
+    attribute: current_temperature
+    unit_of_measurement: "°C"
+
+  - platform: homeassistant
+    id: climate_set_temp_ac1
+    entity_id: "climate.ac_master_room_climate"
+    attribute: temperature
+    unit_of_measurement: "°C"
+
+  - platform: homeassistant
+    id: climate_set_temp_ac2
+    entity_id: "climate.ac_living_room_climate"
+    attribute: temperature
+    unit_of_measurement: "°C"
+
+  - platform: homeassistant
+    id: climate_set_temp_ac3
+    entity_id: "climate.ac_child_room_climate"
+    attribute: temperature
+    unit_of_measurement: "°C"
+
+  - platform: homeassistant
+    id: climate_set_temp_ac4
+    entity_id: "climate.ac_living_room_climate"
+    attribute: temperature
+    unit_of_measurement: "°C"

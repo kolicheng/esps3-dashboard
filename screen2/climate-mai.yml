@@ -32,7 +32,7 @@ screens:
              return id(climate_state_mai).state;   
 
         - type: button 
-          position: 8, 127   #2-1 (冷氣)          
+          position: 8, 127   #2-1 (冷氣)         
           text: "Cool"
           icon: 󰾥
           enabled: |-
