@@ -35,11 +35,18 @@ screen:
           on_click:
             then:
               - lambda: |-
-                  id(current_media) = "media_player.xiao_hai_fang";
-              - homeassistant.service:
-                  service: media_player.turn_on
-                  data:
-                    entity_id: media_player.xiao_hai_fang
+                  if (id(is_powered_on)) {
+                    # 切換控制目標
+                    id(current_media) = "media_player.xiao_hai_fang";
+                  } else {
+                    # 開機並切換
+                    homeassistant.service:
+                      service: media_player.turn_on
+                      data:
+                        entity_id: media_player.xiao_hai_fang
+                    id(current_media) = "media_player.xiao_hai_fang";
+                    id(is_powered_on) = true;
+                  }
 
         - type: button
           position: 244, 8  # 1-3 媒體2
@@ -52,11 +59,18 @@ screen:
           on_click:
             then:
               - lambda: |-
-                  id(current_media) = "media_player.zhu_wo_shi";
-              - homeassistant.service:
-                  service: media_player.turn_on
-                  data:
-                    entity_id: media_player.zhu_wo_shi
+                  if (id(is_powered_on)) {
+                    # 切換控制目標
+                    id(current_media) = "media_player.zhu_wo_shi";
+                  } else {
+                    # 開機並切換
+                    homeassistant.service:
+                      service: media_player.turn_on
+                      data:
+                        entity_id: media_player.zhu_wo_shi
+                    id(current_media) = "media_player.zhu_wo_shi";
+                    id(is_powered_on) = true;
+                  }
 
         - type: button
           position: 362, 8  # 1-4 媒體3
@@ -69,11 +83,18 @@ screen:
           on_click:
             then:
               - lambda: |-
-                  id(current_media) = "media_player.ke_ting";
-              - homeassistant.service:
-                  service: media_player.turn_on
-                  data:
-                    entity_id: media_player.ke_ting
+                  if (id(is_powered_on)) {
+                    # 切換控制目標
+                    id(current_media) = "media_player.ke_ting";
+                  } else {
+                    # 開機並切換
+                    homeassistant.service:
+                      service: media_player.turn_on
+                      data:
+                        entity_id: media_player.ke_ting
+                    id(current_media) = "media_player.ke_ting";
+                    id(is_powered_on) = true;
+                  }
 
         - type: button
           position: 8, 127  # 3-1 關機
@@ -157,6 +178,9 @@ globals:
   - id: current_media
     type: std::string
     initial_value: '""'
+  - id: is_powered_on
+    type: bool
+    initial_value: false
 
 text_sensor:  #"文字" 類用text_sensor 開關的on/off 也算是
   - platform: homeassistant
