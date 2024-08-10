@@ -1,3 +1,4 @@
+
 esphome:
   name: dashboard-one-c19a94 # 亂改會死機
   friendly_name: dashboard-one-c19a94 # 可改，例如 "Livingroom Dashboard"
