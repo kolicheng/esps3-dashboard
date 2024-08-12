@@ -54,27 +54,14 @@ screen:
           text: "Mainroom" # 要改房間名稱
           enabled: return true;
           checked: |-
-            if(id(media_liv_state).state == "on") { return 1; }
+            if(id(media_player.xiao_hai_fang) == "on") { return 1; }
             else { return 0; }    
-          on_click:
+          on_press:
             then:
-              - lambda: |-
-                  if (id(is_powered_on)) {
-                    # 關機
-                    homeassistant.service:
-                      service: media_player.turn_off
-                      data:
-                        entity_id: !lambda 'return id(current_media);'
-                    id(is_powered_on) = false;
-                  } else {
-                    # 開機
-                    homeassistant.service:
-                      service: media_player.turn_on
-                      data:
-                        entity_id: media_player.zhu_wo_shi
-                    id(current_media) = "media_player.zhu_wo_shi";
-                    id(is_powered_on) = true;
-                  }
+              - homeassistant.service:
+                  service: media_player.toggle
+                  data:
+                    entity_id: media_player.media_device_2
 
         - type: button
           position: 362, 127  # 2-4 媒體3
@@ -140,7 +127,9 @@ screen:
                   service: media_player.volume_set # 音量=0 靜音
                   data:
                     volume_level: "0"
-                    entity_id: !lambda 'return id(current_media);'
+                    entity_id: |-
+                      return id(current_media);
+
 
         - type: button
           position: 244, 246  # 3-3 聲音大
@@ -152,7 +141,8 @@ screen:
               - homeassistant.service:
                   service: media_player.volume_up  # 提高音量
                   data:
-                    entity_id: !lambda 'return id(current_media);'
+                    entity_id: |-
+                      return id(current_media);
 
         - type: button
           position: 362, 246 # 3-4 聲音小
@@ -164,7 +154,8 @@ screen:
               - homeassistant.service:
                   service: media_player.volume_down  
                   data:
-                    entity_id: !lambda 'return id(current_media);'
+                    entity_id: |-
+                      return id(current_media);
                    
                   
 ############狀態連結
